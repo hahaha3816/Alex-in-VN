@@ -1,685 +1,1042 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alex ở Việt Nam — Traffic Survival Guide</title>
-<style>
-  :root{
-    --paper:#F3E7CC;
-    --paper-dark:#E9D9AF;
-    --ink:#241C15;
-    --lacquer:#C1272D;
-    --lacquer-dark:#8f1c21;
-    --bamboo:#3F6B4F;
-    --bamboo-dark:#2c4d38;
-    --gold:#D4A63A;
-    --sky:#3E7C97;
-    --danger:#E63946;
-    --panel-border: 4px solid var(--ink);
-    --radius: 14px;
-    --shadow: 6px 6px 0 var(--ink);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    min-height:100vh;
-    background:
-      radial-gradient(circle at 8px 8px, rgba(36,28,21,0.06) 1.5px, transparent 1.6px) 0 0/22px 22px,
-      var(--paper);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    color:var(--ink);
-    display:flex;
-    justify-content:center;
-    padding:24px 14px 60px;
-  }
-  .stage{
-    width:100%;
-    max-width:640px;
-  }
-  h1,h2,h3,.display{
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-  }
-  /* ---------- top bar / progress ---------- */
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:14px;
-  }
-  .brand{
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:800;
-    font-size:1.15rem;
-    color:var(--lacquer);
-    display:flex;
-    align-items:center;
-    gap:8px;
-    letter-spacing:.5px;
-  }
-  .brand .flag{font-size:1.3rem;}
-  .notebook{
-    display:flex;
-    gap:6px;
-  }
-  .notebook .page{
-    width:22px;height:26px;
-    border:2.5px solid var(--ink);
-    border-radius:3px;
-    background:var(--paper-dark);
-    position:relative;
-  }
-  .notebook .page.filled{
-    background:var(--gold);
-  }
-  .notebook .page.filled::after{
-    content:"✓";
-    position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;
-    font-size:.7rem;font-weight:800;color:var(--ink);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex ở Việt Nam — Traffic Survival Guide</title>
+  <style>
+    :root {
+      --paper: #F3E7CC;
+      --paper-dark: #E9D9AF;
+      --ink: #241C15;
+      --lacquer: #C1272D;
+      --lacquer-dark: #8f1c21;
+      --bamboo: #3F6B4F;
+      --bamboo-dark: #2c4d38;
+      --gold: #D4A63A;
+      --sky: #3E7C97;
+      --danger: #E63946;
+      --panel-border: 4px solid var(--ink);
+      --radius: 14px;
+      --shadow: 6px 6px 0 var(--ink);
+    }
 
-  /* ---------- comic panel ---------- */
-  .panel{
-    background:var(--paper);
-    border:var(--panel-border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    overflow:hidden;
-    margin-bottom:18px;
-    position:relative;
-  }
-  .panel-header{
-    background:var(--ink);
-    color:var(--paper);
-    padding:9px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:700;
-    font-size:.85rem;
-    letter-spacing:.5px;
-    text-transform:uppercase;
-  }
-  .panel-header .lv{color:var(--gold);}
-  .scene{
-    height:190px;
-    position:relative;
-    overflow:hidden;
-    border-bottom:3px solid var(--ink);
-  }
-  .scene svg{width:100%;height:100%;display:block;}
+    * {
+      box-sizing: border-box;
+    }
 
-  /* ---------- speech bubble ---------- */
-  .bubble-wrap{
-    padding:16px 18px 4px;
-  }
-  .bubble{
-    background:#fff;
-    border:3px solid var(--ink);
-    border-radius:16px;
-    padding:12px 16px;
-    position:relative;
-    font-size:.95rem;
-    line-height:1.45;
-    margin-bottom:6px;
-  }
-  .bubble.alex{border-color:var(--sky);}
-  .bubble.minh{border-color:var(--bamboo);}
-  .bubble .who{
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:700;
-    font-size:.75rem;
-    text-transform:uppercase;
-    letter-spacing:.6px;
-    display:block;
-    margin-bottom:3px;
-  }
-  .bubble.alex .who{color:var(--sky);}
-  .bubble.minh .who{color:var(--bamboo);}
-  .bubble::after{
-    content:"";
-    position:absolute;
-    left:22px; bottom:-11px;
-    width:0;height:0;
-    border:10px solid transparent;
-    border-top-color:#fff;
-    filter:drop-shadow(0 2px 0 var(--ink));
-  }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ---------- choices ---------- */
-  .choices{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    padding:6px 18px 18px;
-  }
-  .choice-btn{
-    text-align:left;
-    background:var(--paper-dark);
-    border:3px solid var(--ink);
-    border-radius:10px;
-    padding:11px 14px;
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    font-weight:600;
-    font-size:.92rem;
-    cursor:pointer;
-    box-shadow:3px 3px 0 var(--ink);
-    transition:transform .08s ease;
-    color:var(--ink);
-  }
-  .choice-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
-  .choice-btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
-  .choice-btn .tag{
-    display:inline-block;
-    font-size:.68rem;
-    font-weight:800;
-    background:var(--ink);
-    color:var(--paper);
-    padding:1px 7px;
-    border-radius:5px;
-    margin-right:8px;
-    vertical-align:middle;
-  }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 8px 8px, rgba(36, 28, 21, 0.06) 1.5px, transparent 1.6px) 0 0/22px 22px,
+        var(--paper);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      padding: 24px 14px 60px;
+    }
 
-  /* checklist style for level 2 */
-  .checklist{padding:6px 18px 6px;display:flex;flex-direction:column;gap:8px;}
-  .check-item{
-    display:flex;align-items:center;gap:10px;
-    background:#fff;border:3px solid var(--ink);border-radius:10px;
-    padding:10px 12px;cursor:pointer;font-weight:600;font-size:.92rem;
-  }
-  .check-item input{width:20px;height:20px;accent-color:var(--bamboo);}
-  .checklist-submit{margin:10px 18px 18px;}
+    .stage {
+      width: 100%;
+      max-width: 640px;
+    }
 
-  /* countdown for level 3 */
-  .countdown-wrap{
-    padding:4px 18px 18px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:14px;
-  }
-  .light{
-    width:64px;height:64px;border-radius:50%;
-    background:var(--danger);
-    border:4px solid var(--ink);
-    box-shadow:0 0 0 6px #fff, 0 0 0 10px var(--ink);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-weight:800;color:#fff;font-size:1.6rem;
-  }
-  .go-stop-row{display:flex;gap:14px;width:100%;}
-  .go-stop-row .choice-btn{flex:1;text-align:center;font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-size:1rem;}
-  .stop-btn{background:var(--danger);color:#fff;}
-  .go-btn{background:var(--bamboo);color:#fff;}
+    h1,
+    h2,
+    h3,
+    .display {
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+    }
 
-  /* feedback */
-  .feedback{
-    margin:0 18px 18px;
-    padding:12px 14px;
-    border-radius:10px;
-    border:3px solid var(--ink);
-    font-size:.9rem;
-    font-weight:600;
-    display:none;
-  }
-  .feedback.good{background:#DCEEDC;border-color:var(--bamboo-dark);}
-  .feedback.bad{background:#F6D9D9;border-color:var(--lacquer-dark);}
-  .feedback .title{font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-size:.95rem;display:block;margin-bottom:4px;}
-  .feedback.good .title{color:var(--bamboo-dark);}
-  .feedback.bad .title{color:var(--lacquer-dark);}
+    /* ---------- top bar / progress ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
 
-  .next-btn{
-    display:none;
-    margin:0 18px 20px;
-    background:var(--lacquer);
-    color:#fff;
-    border:3px solid var(--ink);
-    border-radius:10px;
-    padding:12px;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:700;
-    font-size:1rem;
-    letter-spacing:.4px;
-    cursor:pointer;
-    box-shadow:3px 3px 0 var(--ink);
-    width:calc(100% - 36px);
-  }
-  .next-btn:hover{transform:translate(-1px,-1px);}
+    .brand {
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--lacquer);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: .5px;
+    }
 
-  /* tip unlock overlay */
-  .tip-overlay{
-    position:fixed;inset:0;
-    background:rgba(36,28,21,0.72);
-    display:none;
-    align-items:center;justify-content:center;
-    z-index:50;
-    padding:20px;
-  }
-  .tip-card{
-    background:var(--paper);
-    border:4px solid var(--ink);
-    border-radius:16px;
-    box-shadow:8px 8px 0 var(--gold);
-    max-width:420px;
-    padding:26px 24px 22px;
-    text-align:center;
-    animation:pop .35s ease;
-  }
-  @keyframes pop{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
-  .tip-card .stamp{
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:800;
-    color:var(--lacquer);
-    font-size:.8rem;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    margin-bottom:6px;
-  }
-  .tip-card .num{
-    width:50px;height:50px;border-radius:50%;
-    background:var(--gold);border:3px solid var(--ink);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-weight:800;font-size:1.3rem;
-    margin:0 auto 12px;
-  }
-  .tip-card .tip-text{
-    font-size:1.02rem;
-    font-weight:600;
-    line-height:1.45;
-    margin-bottom:18px;
-  }
-  .tip-card button{
-    background:var(--bamboo);
-    color:#fff;border:3px solid var(--ink);
-    border-radius:10px;padding:10px 22px;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-weight:700;font-size:.95rem;
-    cursor:pointer;box-shadow:3px 3px 0 var(--ink);
-  }
+    .brand .flag {
+      font-size: 1.3rem;
+    }
 
-  /* start / end screens */
-  .cover{
-    text-align:center;
-    padding:34px 22px 26px;
-  }
-  .cover h1{
-    font-size:1.7rem;
-    color:var(--lacquer);
-    margin:6px 0 4px;
-    line-height:1.2;
-  }
-  .cover p{font-size:.92rem;line-height:1.5;margin:0 0 18px;}
-  .cast{
-    display:flex;
-    justify-content:center;
-    gap:26px;
-    margin:14px 0 22px;
-  }
-  .cast .who{text-align:center;font-size:.78rem;font-weight:700;}
-  .cast .who span{display:block;font-size:.68rem;font-weight:500;color:#5b5044;}
-  .start-btn{
-    background:var(--lacquer);color:#fff;border:3px solid var(--ink);
-    border-radius:12px;padding:13px 30px;font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:800;font-size:1.05rem;cursor:pointer;
-    box-shadow:4px 4px 0 var(--ink);letter-spacing:.4px;
-  }
-  .start-btn:hover{transform:translate(-1px,-1px);}
+    .notebook {
+      display: flex;
+      gap: 6px;
+    }
 
-  .guide-list{padding:8px 22px 4px;display:flex;flex-direction:column;gap:10px;}
-  .guide-item{
-    display:flex;gap:12px;align-items:flex-start;
-    background:#fff;border:3px solid var(--ink);border-radius:10px;padding:10px 12px;
-  }
-  .guide-item .num{
-    flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold);
-    border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-weight:800;font-size:.9rem;
-  }
-  .guide-item p{margin:0;font-size:.88rem;font-weight:600;line-height:1.4;}
-  .replay-btn{
-    margin:14px 22px 22px;
-    background:var(--bamboo);color:#fff;border:3px solid var(--ink);
-    border-radius:10px;padding:12px;font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;font-weight:700;
-    width:calc(100% - 44px);cursor:pointer;box-shadow:3px 3px 0 var(--ink);
-  }
-  .hidden{display:none !important;}
-  footer.note{
-    text-align:center;font-size:.72rem;color:#7a6f5e;margin-top:6px;padding:0 10px;
-  }
+    .notebook .page {
+      width: 22px;
+      height: 26px;
+      border: 2.5px solid var(--ink);
+      border-radius: 3px;
+      background: var(--paper-dark);
+      position: relative;
+    }
 
-  /* ---------- multilingual selector ---------- */
-  .language-box{
-    margin:16px auto 18px;
-    max-width:360px;
-    background:#fff;
-    border:3px solid var(--ink);
-    border-radius:12px;
-    padding:12px 14px;
-    text-align:left;
-    box-shadow:3px 3px 0 var(--ink);
-  }
-  .language-box label{
-    display:block;
-    font-family:'Trebuchet MS','Arial Rounded MT Bold',Arial,sans-serif;
-    font-weight:800;
-    font-size:.78rem;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-    margin-bottom:6px;
-    color:var(--bamboo-dark);
-  }
-  .language-select{
-    width:100%;
-    background:var(--paper);
-    border:2.5px solid var(--ink);
-    border-radius:8px;
-    padding:9px 10px;
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .top-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .top-language{
-    background:#fff;
-    border:2.5px solid var(--ink);
-    border-radius:8px;
-    padding:6px 8px;
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    font-size:.72rem;
-    font-weight:700;
-    color:var(--ink);
-    cursor:pointer;
-    max-width:130px;
-  }
-  .language-note{
-    font-size:.72rem;
-    line-height:1.4;
-    color:#6e6255;
-    margin-top:7px;
-  }
-  @media (max-width:520px){
-    .brand{font-size:.95rem;}
-    .top-language{max-width:105px;font-size:.66rem;padding:5px 6px;}
-    .notebook .page{width:18px;height:22px;}
-  }
+    .notebook .page.filled {
+      background: var(--gold);
+    }
+
+    .notebook .page.filled::after {
+      content: "✓";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    /* ---------- comic panel ---------- */
+    .panel {
+      background: var(--paper);
+      border: var(--panel-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .panel-header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .panel-header .lv {
+      color: var(--gold);
+    }
+
+    .scene {
+      height: 190px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .scene svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ---------- speech bubble ---------- */
+    .bubble-wrap {
+      padding: 16px 18px 4px;
+    }
+
+    .bubble {
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      padding: 12px 16px;
+      position: relative;
+      font-size: .95rem;
+      line-height: 1.45;
+      margin-bottom: 6px;
+    }
+
+    .bubble.alex {
+      border-color: var(--sky);
+    }
+
+    .bubble.minh {
+      border-color: var(--bamboo);
+    }
+
+    .bubble .who {
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 700;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .bubble.alex .who {
+      color: var(--sky);
+    }
+
+    .bubble.minh .who {
+      color: var(--bamboo);
+    }
+
+    .bubble::after {
+      content: "";
+      position: absolute;
+      left: 22px;
+      bottom: -11px;
+      width: 0;
+      height: 0;
+      border: 10px solid transparent;
+      border-top-color: #fff;
+      filter: drop-shadow(0 2px 0 var(--ink));
+    }
+
+    /* ---------- choices ---------- */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 6px 18px 18px;
+    }
+
+    .choice-btn {
+      text-align: left;
+      background: var(--paper-dark);
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      font-weight: 600;
+      font-size: .92rem;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform .08s ease;
+      color: var(--ink);
+    }
+
+    .choice-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .choice-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0 0 0 var(--ink);
+    }
+
+    .choice-btn .tag {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 800;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 1px 7px;
+      border-radius: 5px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* checklist style for level 2 */
+    .checklist {
+      padding: 6px 18px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .92rem;
+    }
+
+    .check-item input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--bamboo);
+    }
+
+    .checklist-submit {
+      margin: 10px 18px 18px;
+    }
+
+    /* countdown for level 3 */
+    .countdown-wrap {
+      padding: 4px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .light {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--danger);
+      border: 4px solid var(--ink);
+      box-shadow: 0 0 0 6px #fff, 0 0 0 10px var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.6rem;
+    }
+
+    .go-stop-row {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .go-stop-row .choice-btn {
+      flex: 1;
+      text-align: center;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-size: 1rem;
+    }
+
+    .stop-btn {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .go-btn {
+      background: var(--bamboo);
+      color: #fff;
+    }
+
+    /* feedback */
+    .feedback {
+      margin: 0 18px 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 3px solid var(--ink);
+      font-size: .9rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.good {
+      background: #DCEEDC;
+      border-color: var(--bamboo-dark);
+    }
+
+    .feedback.bad {
+      background: #F6D9D9;
+      border-color: var(--lacquer-dark);
+    }
+
+    .feedback .title {
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-size: .95rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .feedback.good .title {
+      color: var(--bamboo-dark);
+    }
+
+    .feedback.bad .title {
+      color: var(--lacquer-dark);
+    }
+
+    .next-btn {
+      display: none;
+      margin: 0 18px 20px;
+      background: var(--lacquer);
+      color: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .4px;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+      width: calc(100% - 36px);
+    }
+
+    .next-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    /* tip unlock overlay */
+    .tip-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(36, 28, 21, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 20px;
+    }
+
+    .tip-card {
+      background: var(--paper);
+      border: 4px solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 8px 8px 0 var(--gold);
+      max-width: 420px;
+      padding: 26px 24px 22px;
+      text-align: center;
+      animation: pop .35s ease;
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .tip-card .stamp {
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      color: var(--lacquer);
+      font-size: .8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .tip-card .num {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin: 0 auto 12px;
+    }
+
+    .tip-card .tip-text {
+      font-size: 1.02rem;
+      font-weight: 600;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .tip-card button {
+      background: var(--bamboo);
+      color: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    /* start / end screens */
+    .cover {
+      text-align: center;
+      padding: 34px 22px 26px;
+    }
+
+    .cover h1 {
+      font-size: 1.7rem;
+      color: var(--lacquer);
+      margin: 6px 0 4px;
+      line-height: 1.2;
+    }
+
+    .cover p {
+      font-size: .92rem;
+      line-height: 1.5;
+      margin: 0 0 18px;
+    }
+
+    .cast {
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      margin: 14px 0 22px;
+    }
+
+    .cast .who {
+      text-align: center;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .cast .who span {
+      display: block;
+      font-size: .68rem;
+      font-weight: 500;
+      color: #5b5044;
+    }
+
+    .start-btn {
+      background: var(--lacquer);
+      color: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 13px 30px;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--ink);
+      letter-spacing: .4px;
+    }
+
+    .start-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .guide-list {
+      padding: 8px 22px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .guide-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .guide-item .num {
+      flex: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+
+    .guide-item p {
+      margin: 0;
+      font-size: .88rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .replay-btn {
+      margin: 14px 22px 22px;
+      background: var(--bamboo);
+      color: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 700;
+      width: calc(100% - 44px);
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer.note {
+      text-align: center;
+      font-size: .72rem;
+      color: #7a6f5e;
+      margin-top: 6px;
+      padding: 0 10px;
+    }
+
+    /* ---------- multilingual selector ---------- */
+    .language-box {
+      margin: 16px auto 18px;
+      max-width: 360px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .language-box label {
+      display: block;
+      font-family: 'Trebuchet MS', 'Arial Rounded MT Bold', Arial, sans-serif;
+      font-weight: 800;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+      color: var(--bamboo-dark);
+    }
+
+    .language-select {
+      width: 100%;
+      background: var(--paper);
+      border: 2.5px solid var(--ink);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-language {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      max-width: 130px;
+    }
+
+    .language-note {
+      font-size: .72rem;
+      line-height: 1.4;
+      color: #6e6255;
+      margin-top: 7px;
+    }
+
+    @media (max-width:520px) {
+      .brand {
+        font-size: .95rem;
+      }
+
+      .top-language {
+        max-width: 105px;
+        font-size: .66rem;
+        padding: 5px 6px;
+      }
+
+      .notebook .page {
+        width: 18px;
+        height: 22px;
+      }
+    }
 
 
-  /* ---------- mobile-first hardening ---------- */
-  html{
-    -webkit-text-size-adjust:100%;
-    text-size-adjust:100%;
-  }
-  body{
-    width:100%;
-    overflow-x:hidden;
-    padding:10px 8px 32px;
-  }
-  button,select,label{
-    touch-action:manipulation;
-    -webkit-tap-highlight-color:transparent;
-  }
-  button,select{
-    min-height:44px;
-  }
-  .stage{
-    min-width:0;
-    max-width:640px;
-  }
-  .topbar{
-    gap:6px;
-    min-width:0;
-  }
-  .brand{
-    min-width:0;
-    flex:1 1 auto;
-  }
-  .top-actions{
-    min-width:0;
-    flex:0 0 auto;
-  }
-  .notebook{
-    flex-wrap:nowrap;
-  }
-  .panel,
-  .scene,
-  .bubble,
-  .choice-btn,
-  .check-item{
-    max-width:100%;
-  }
-  .choice-btn,
-  .check-item{
-    line-height:1.35;
-  }
+    /* ---------- mobile-first hardening ---------- */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
 
-  @media (max-width:560px){
-    body{padding:6px 6px 24px;}
-    .topbar{
-      align-items:flex-start;
-      flex-wrap:wrap;
-      margin-bottom:10px;
+    body {
+      width: 100%;
+      overflow-x: hidden;
+      padding: 10px 8px 32px;
     }
-    .brand{
-      width:100%;
-      flex-basis:100%;
-      font-size:1rem;
-    }
-    .top-actions{
-      width:100%;
-      justify-content:space-between;
-    }
-    .top-language{
-      flex:1 1 auto;
-      max-width:none;
-      width:auto;
-      min-height:38px;
-    }
-    .notebook{
-      flex:0 0 auto;
-    }
-    .notebook .page{
-      width:18px;
-      height:22px;
-    }
-    .panel{
-      border-width:3px;
-      box-shadow:4px 4px 0 var(--ink);
-      margin-bottom:14px;
-    }
-    .panel-header{
-      padding:8px 10px;
-      gap:8px;
-      font-size:.75rem;
-    }
-    .scene{
-      height:170px;
-    }
-    .bubble-wrap{
-      padding:12px 12px 3px;
-    }
-    .bubble{
-      font-size:.9rem;
-      padding:11px 12px;
-    }
-    .choices{
-      padding:6px 12px 14px;
-    }
-    .choice-btn{
-      padding:12px;
-      font-size:.9rem;
-    }
-    .checklist{
-      padding:6px 12px;
-    }
-    .checklist-submit{
-      margin:10px 12px 16px;
-      width:calc(100% - 24px);
-    }
-    .feedback{
-      margin:0 12px 14px;
-    }
-    .next-btn{
-      margin:0 12px 16px;
-      width:calc(100% - 24px);
-    }
-    .countdown-wrap{
-      padding:4px 12px 16px;
-    }
-    .go-stop-row{
-      gap:8px;
-    }
-    .cover{
-      padding:24px 14px 20px;
-    }
-    .cover h1{
-      font-size:1.55rem;
-    }
-    .cast{
-      gap:18px;
-    }
-    .language-box{
-      margin:14px 0 16px;
-      max-width:none;
-    }
-    .guide-list{
-      padding:8px 12px 4px;
-    }
-    .replay-btn{
-      margin:14px 12px 18px;
-      width:calc(100% - 24px);
-    }
-    .tip-overlay{
-      padding:12px;
-    }
-    .tip-card{
-      width:100%;
-      max-width:390px;
-      padding:20px 16px 18px;
-      max-height:90vh;
-      overflow:auto;
-    }
-  }
 
-  @media (max-width:360px){
-    .top-actions{gap:5px;}
-    .notebook{gap:3px;}
-    .notebook .page{width:16px;height:20px;}
-    .panel-header{font-size:.68rem;}
-    .scene{height:155px;}
-    .go-stop-row{flex-direction:column;}
-    .cover h1{font-size:1.42rem;}
-  }
+    button,
+    select,
+    label {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-</style>
+    button,
+    select {
+      min-height: 44px;
+    }
+
+    .stage {
+      min-width: 0;
+      max-width: 640px;
+    }
+
+    .topbar {
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .brand {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .top-actions {
+      min-width: 0;
+      flex: 0 0 auto;
+    }
+
+    .notebook {
+      flex-wrap: nowrap;
+    }
+
+    .panel,
+    .scene,
+    .bubble,
+    .choice-btn,
+    .check-item {
+      max-width: 100%;
+    }
+
+    .choice-btn,
+    .check-item {
+      line-height: 1.35;
+    }
+
+    @media (max-width:560px) {
+      body {
+        padding: 6px 6px 24px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      .brand {
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 1rem;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .top-language {
+        flex: 1 1 auto;
+        max-width: none;
+        width: auto;
+        min-height: 38px;
+      }
+
+      .notebook {
+        flex: 0 0 auto;
+      }
+
+      .notebook .page {
+        width: 18px;
+        height: 22px;
+      }
+
+      .panel {
+        border-width: 3px;
+        box-shadow: 4px 4px 0 var(--ink);
+        margin-bottom: 14px;
+      }
+
+      .panel-header {
+        padding: 8px 10px;
+        gap: 8px;
+        font-size: .75rem;
+      }
+
+      .scene {
+        height: 170px;
+      }
+
+      .bubble-wrap {
+        padding: 12px 12px 3px;
+      }
+
+      .bubble {
+        font-size: .9rem;
+        padding: 11px 12px;
+      }
+
+      .choices {
+        padding: 6px 12px 14px;
+      }
+
+      .choice-btn {
+        padding: 12px;
+        font-size: .9rem;
+      }
+
+      .checklist {
+        padding: 6px 12px;
+      }
+
+      .checklist-submit {
+        margin: 10px 12px 16px;
+        width: calc(100% - 24px);
+      }
+
+      .feedback {
+        margin: 0 12px 14px;
+      }
+
+      .next-btn {
+        margin: 0 12px 16px;
+        width: calc(100% - 24px);
+      }
+
+      .countdown-wrap {
+        padding: 4px 12px 16px;
+      }
+
+      .go-stop-row {
+        gap: 8px;
+      }
+
+      .cover {
+        padding: 24px 14px 20px;
+      }
+
+      .cover h1 {
+        font-size: 1.55rem;
+      }
+
+      .cast {
+        gap: 18px;
+      }
+
+      .language-box {
+        margin: 14px 0 16px;
+        max-width: none;
+      }
+
+      .guide-list {
+        padding: 8px 12px 4px;
+      }
+
+      .replay-btn {
+        margin: 14px 12px 18px;
+        width: calc(100% - 24px);
+      }
+
+      .tip-overlay {
+        padding: 12px;
+      }
+
+      .tip-card {
+        width: 100%;
+        max-width: 390px;
+        padding: 20px 16px 18px;
+        max-height: 90vh;
+        overflow: auto;
+      }
+    }
+
+    @media (max-width:360px) {
+      .top-actions {
+        gap: 5px;
+      }
+
+      .notebook {
+        gap: 3px;
+      }
+
+      .notebook .page {
+        width: 16px;
+        height: 20px;
+      }
+
+      .panel-header {
+        font-size: .68rem;
+      }
+
+      .scene {
+        height: 155px;
+      }
+
+      .go-stop-row {
+        flex-direction: column;
+      }
+
+      .cover h1 {
+        font-size: 1.42rem;
+      }
+    }
+
+
+    /* ---------- background music ---------- */
+    .music-btn {
+      width: 40px;
+      min-width: 40px;
+      height: 38px;
+      min-height: 38px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2.5px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .music-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+
+    .music-btn.music-error {
+      background: #F6D9D9;
+    }
+  </style>
 </head>
+
 <body>
-<div class="stage">
 
-  <div class="topbar">
-    <div class="brand"><span class="flag">🇻🇳</span> <span id="brand-text">Alex in Vietnam</span></div>
-    <div class="top-actions">
-      <select class="top-language" id="top-language" onchange="changeLanguage(this.value)" aria-label="Language">
-        <option value="en">English</option>
-        <option value="vi">Tiếng Việt</option>
-        <option value="ko">한국어</option>
-        <option value="ja">日本語</option>
-        <option value="zh">中文</option>
-        <option value="fr">Français</option>
-      </select>
-      <div class="notebook" id="notebook">
-        <div class="page" data-i="1"></div>
-        <div class="page" data-i="2"></div>
-        <div class="page" data-i="3"></div>
-        <div class="page" data-i="4"></div>
-        <div class="page" data-i="5"></div>
-      </div>
-    </div>
-  </div>
+  <audio id="bg-music" preload="auto" loop playsinline>
+    <source src="assets/welcome_to_vietnam.mp3" type="audio/mpeg">
+  </audio>
 
-  <!-- ================= COVER ================= -->
-  <div class="panel" id="screen-cover">
-    <div class="cover">
-      <h1 id="cover-title">Alex's Vietnam<br>Traffic Survival Guide</h1>
-      <p id="cover-desc"></p>
+  <div class="stage">
 
-      <div class="cast">
-        <div class="who">🧑‍🦱 Alex<span id="cast-alex"></span></div>
-        <div class="who">🧑🏻 Minh<span id="cast-minh"></span></div>
-      </div>
-
-      <div class="language-box">
-        <label id="language-label" for="cover-language"></label>
-        <select class="language-select" id="cover-language" onchange="changeLanguage(this.value)">
-          <option value="en">🇬🇧 English</option>
-          <option value="vi">🇻🇳 Tiếng Việt</option>
-          <option value="ko">🇰🇷 한국어</option>
-          <option value="ja">🇯🇵 日本語</option>
-          <option value="zh">🇨🇳 中文</option>
-          <option value="fr">🇫🇷 Français</option>
+    <div class="topbar">
+      <div class="brand"><span class="flag">🇻🇳</span> <span id="brand-text">Alex in Vietnam</span></div>
+      <div class="top-actions">
+        <select class="top-language" id="top-language" onchange="changeLanguage(this.value)" aria-label="Language">
+          <option value="en">English</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="fr">Français</option>
         </select>
-        <div class="language-note" id="language-note"></div>
-        <div class="language-note" id="mobile-demo-note">For the best mobile demo, open this game in Safari/Chrome from a web link rather than a file preview.</div>
+        <button class="music-btn" id="music-btn" onclick="toggleMusic()" aria-label="Toggle background music"
+          title="Background music">🔊</button>
+        <div class="notebook" id="notebook">
+          <div class="page" data-i="1"></div>
+          <div class="page" data-i="2"></div>
+          <div class="page" data-i="3"></div>
+          <div class="page" data-i="4"></div>
+          <div class="page" data-i="5"></div>
+        </div>
       </div>
+    </div>
 
-      <button class="start-btn" id="start-btn" onclick="startGame()"></button>
+    <!-- ================= COVER ================= -->
+    <div class="panel" id="screen-cover">
+      <div class="cover">
+        <h1 id="cover-title">Alex's Vietnam<br>Traffic Survival Guide</h1>
+        <p id="cover-desc"></p>
+
+        <div class="cast">
+          <div class="who">🧑‍🦱 Alex<span id="cast-alex"></span></div>
+          <div class="who">🧑🏻 Minh<span id="cast-minh"></span></div>
+        </div>
+
+        <div class="language-box">
+          <label id="language-label" for="cover-language"></label>
+          <select class="language-select" id="cover-language" onchange="changeLanguage(this.value)">
+            <option value="en">🇬🇧 English</option>
+            <option value="vi">🇻🇳 Tiếng Việt</option>
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="fr">🇫🇷 Français</option>
+          </select>
+          <div class="language-note" id="language-note"></div>
+          <div class="language-note" id="mobile-demo-note">For the best mobile demo, open this game in Safari/Chrome
+            from a web link rather than a file preview.</div>
+        </div>
+
+        <button class="start-btn" id="start-btn" onclick="startGame()"></button>
+      </div>
+    </div>
+
+    <!-- ================= LEVEL SCREEN ================= -->
+    <div class="panel hidden" id="screen-level">
+      <div class="panel-header">
+        <span><span class="lv" id="lv-num">LEVEL 1</span> — <span id="lv-title"></span></span>
+        <span id="lv-progress">1 / 5</span>
+      </div>
+      <div class="scene" id="lv-scene"></div>
+      <div class="bubble-wrap" id="lv-dialogue"></div>
+      <div id="lv-interactive"></div>
+      <div class="feedback" id="lv-feedback">
+        <span class="title" id="fb-title"></span>
+        <span id="fb-text"></span>
+      </div>
+      <button class="next-btn" id="lv-next"></button>
+    </div>
+
+    <!-- ================= FINAL GUIDE ================= -->
+    <div class="panel hidden" id="screen-end">
+      <div class="panel-header"><span id="final-reward"></span><span>5 / 5</span></div>
+      <div class="cover" style="padding-bottom:6px;">
+        <h2 style="color:var(--lacquer);margin:4px 0 2px;">Alex's Vietnam<br>Traffic Survival Guide</h2>
+        <p id="final-desc" style="margin-bottom:4px;"></p>
+      </div>
+      <div class="guide-list" id="guide-list"></div>
+      <button class="replay-btn" id="replay-btn" onclick="restartGame()"></button>
+    </div>
+
+    <footer class="note" id="footer-note"></footer>
+  </div>
+
+  <!-- tip overlay -->
+  <div class="tip-overlay" id="tip-overlay">
+    <div class="tip-card">
+      <div class="stamp" id="tip-stamp"></div>
+      <div class="num" id="tip-num">1</div>
+      <div class="tip-text" id="tip-text"></div>
+      <button id="tip-close-btn" onclick="closeTip()"></button>
     </div>
   </div>
 
-  <!-- ================= LEVEL SCREEN ================= -->
-  <div class="panel hidden" id="screen-level">
-    <div class="panel-header">
-      <span><span class="lv" id="lv-num">LEVEL 1</span> — <span id="lv-title"></span></span>
-      <span id="lv-progress">1 / 5</span>
-    </div>
-    <div class="scene" id="lv-scene"></div>
-    <div class="bubble-wrap" id="lv-dialogue"></div>
-    <div id="lv-interactive"></div>
-    <div class="feedback" id="lv-feedback">
-      <span class="title" id="fb-title"></span>
-      <span id="fb-text"></span>
-    </div>
-    <button class="next-btn" id="lv-next"></button>
-  </div>
+  <script>
 
-  <!-- ================= FINAL GUIDE ================= -->
-  <div class="panel hidden" id="screen-end">
-    <div class="panel-header"><span id="final-reward"></span><span>5 / 5</span></div>
-    <div class="cover" style="padding-bottom:6px;">
-      <h2 style="color:var(--lacquer);margin:4px 0 2px;">Alex's Vietnam<br>Traffic Survival Guide</h2>
-      <p id="final-desc" style="margin-bottom:4px;"></p>
-    </div>
-    <div class="guide-list" id="guide-list"></div>
-    <button class="replay-btn" id="replay-btn" onclick="restartGame()"></button>
-  </div>
-
-  <footer class="note" id="footer-note"></footer>
-</div>
-
-<!-- tip overlay -->
-<div class="tip-overlay" id="tip-overlay">
-  <div class="tip-card">
-    <div class="stamp" id="tip-stamp"></div>
-    <div class="num" id="tip-num">1</div>
-    <div class="tip-text" id="tip-text"></div>
-    <button id="tip-close-btn" onclick="closeTip()"></button>
-  </div>
-</div>
-
-<script>
-
-/* ============ SVG SCENES (simple flat comic-style) ============ */
-const scenes = {
-1: `<svg viewBox="0 0 400 190">
+    /* ============ SVG SCENES (simple flat comic-style) ============ */
+    const scenes = {
+      1: `<svg viewBox="0 0 400 190">
   <rect width="400" height="190" fill="#EFE0BE"/>
   <rect y="110" width="400" height="80" fill="#8a8a8a"/>
   <rect y="108" width="400" height="4" fill="#241C15"/>
-  ${[0,60,120,180,240,300,360].map(x=>`<rect x="${x}" y="145" width="30" height="6" fill="#fff"/>`).join('')}
+  ${[0, 60, 120, 180, 240, 300, 360].map(x => `<rect x="${x}" y="145" width="30" height="6" fill="#fff"/>`).join('')}
   <circle cx="60" cy="40" r="16" fill="#fff" opacity=".7"/>
   <circle cx="90" cy="35" r="20" fill="#fff" opacity=".7"/>
   <g><rect x="330" y="55" width="10" height="55" fill="#241C15"/>
@@ -699,7 +1056,7 @@ const scenes = {
   <g transform="translate(70,148)"><circle cx="12" cy="8" r="8" fill="#F4C89B" stroke="#241C15" stroke-width="2.5"/>
     <rect x="2" y="16" width="20" height="26" rx="6" fill="#C1272D" stroke="#241C15" stroke-width="2.5"/></g>
 </svg>`,
-2: `<svg viewBox="0 0 400 190">
+      2: `<svg viewBox="0 0 400 190">
   <rect width="400" height="190" fill="#F3E7CC"/>
   <rect y="130" width="400" height="60" fill="#D9C79A"/>
   <rect x="20" y="40" width="180" height="90" rx="6" fill="#fff" stroke="#241C15" stroke-width="3"/>
@@ -714,7 +1071,7 @@ const scenes = {
     <rect x="45" y="20" width="14" height="35" fill="#241C15"/>
     <circle cx="52" cy="14" r="9" fill="#C1272D" stroke="#241C15" stroke-width="2"/></g>
 </svg>`,
-3: `<svg viewBox="0 0 400 190">
+      3: `<svg viewBox="0 0 400 190">
   <rect width="400" height="190" fill="#EFE0BE"/>
   <rect y="0" width="400" height="190" fill="#8a8a8a" opacity=".15"/>
   <rect x="0" y="70" width="400" height="6" fill="#241C15" opacity=".2"/>
@@ -737,7 +1094,7 @@ const scenes = {
     <path d="M20 -6 L44 -14" stroke="#241C15" stroke-width="3"/>
   </g>
 </svg>`,
-4: `<svg viewBox="0 0 400 190">
+      4: `<svg viewBox="0 0 400 190">
   <rect width="400" height="190" fill="#F3E7CC"/>
   <rect x="60" y="120" width="280" height="14" rx="4" fill="#8a6a3f" stroke="#241C15" stroke-width="3"/>
   <rect x="70" y="60" width="60" height="60" rx="4" fill="#fff" stroke="#241C15" stroke-width="2.5"/>
@@ -751,7 +1108,7 @@ const scenes = {
   <g transform="translate(330,70)"><circle cx="14" cy="12" r="10" fill="#F4C89B" stroke="#241C15" stroke-width="2.5"/>
     <rect x="0" y="24" width="28" height="32" rx="7" fill="#C1272D" stroke="#241C15" stroke-width="2.5"/></g>
 </svg>`,
-5: `<svg viewBox="0 0 400 190">
+      5: `<svg viewBox="0 0 400 190">
   <rect width="400" height="190" fill="#EFE0BE" opacity=".9"/>
   <rect y="130" width="400" height="60" fill="#8a8a8a"/>
   <circle cx="330" cy="30" r="18" fill="#D4A63A" opacity=".6"/>
@@ -766,726 +1123,798 @@ const scenes = {
     <path d="M0 8 a10 10 0 0 1 20 0 z" fill="#C1272D" stroke="#241C15" stroke-width="2.5"/>
     <rect x="-2" y="18" width="24" height="30" rx="6" fill="#3E7C97" stroke="#241C15" stroke-width="2.5"/></g>
 </svg>`
-};
-
-
-const UI = {
-  en:{
-    brand:"Alex in Vietnam",
-    coverDesc:"A 5-level mini-game that helps international visitors learn how to navigate traffic in Vietnam through Alex's first day with his local friend Minh.",
-    castAlex:"Traveler",
-    castMinh:"Local friend",
-    languageLabel:"Choose your language",
-    languageNote:"Demo default: English. You can switch languages at any time.",
-    mobileDemo:"For the best mobile demo, open this game in Safari/Chrome from a web link rather than a file preview.",
-    start:"Start ▶",
-    next:"Continue →",
-    retry:"TRY AGAIN",
-    blocked:"You need to choose the correct answer before you can continue to the next level.",
-    confirm:"✅ Confirm documents",
-    safe:"✅ Safe choice!",
-    risk:"⚠️ Risky choice!",
-    finalReward:"📕 Final Reward",
-    finalDesc:"5/5 rules unlocked — Alex is officially ready for the streets of Vietnam.",
-    replay:"↺ Play again",
-    footer:"Demo mockup — educational content only; it does not replace official legal guidance.",
-    tipStamp:"🇻🇳 Vietnam Survival Tip Unlocked",
-    tipClose:"Save to guidebook 📖",
-    stop:"🛑 STOP",
-    go:"🏍️ GO"
-  },
-  vi:{
-    brand:"Alex ở Việt Nam",
-    coverDesc:"Mini-game 5 màn giúp du khách nước ngoài học cách tham gia giao thông ở Việt Nam qua chuyến đi đầu tiên của Alex cùng người bạn địa phương Minh.",
-    castAlex:"Khách du lịch",
-    castMinh:"Bạn địa phương",
-    languageLabel:"Chọn ngôn ngữ",
-    languageNote:"Bản demo mặc định: English. Bạn có thể đổi ngôn ngữ bất cứ lúc nào.",
-    mobileDemo:"Để demo tốt nhất trên điện thoại, hãy mở game bằng Safari/Chrome từ một đường link web thay vì chế độ xem trước file.",
-    start:"Bắt đầu ▶",
-    next:"Tiếp tục →",
-    retry:"THỬ LẠI",
-    blocked:"Bạn cần chọn đúng đáp án trước khi có thể qua màn tiếp theo.",
-    confirm:"✅ Xác nhận giấy tờ",
-    safe:"✅ An toàn!",
-    risk:"⚠️ Rủi ro!",
-    finalReward:"📕 Phần thưởng cuối",
-    finalDesc:"Đã mở khóa 5/5 quy tắc — Alex đã sẵn sàng hơn cho đường phố Việt Nam.",
-    replay:"↺ Chơi lại từ đầu",
-    footer:"Mockup demo — nội dung giáo dục, không thay thế văn bản pháp luật chính thức.",
-    tipStamp:"🇻🇳 Đã mở khóa Vietnam Survival Tip",
-    tipClose:"Ghi vào sổ tay 📖",
-    stop:"🛑 DỪNG",
-    go:"🏍️ ĐI"
-  },
-  ko:{
-    brand:"베트남의 알렉스",
-    coverDesc:"알렉스와 현지 친구 민의 첫날 여정을 통해 외국인 방문객이 베트남 교통을 이해하도록 돕는 5단계 미니게임입니다.",
-    castAlex:"여행자",
-    castMinh:"현지 친구",
-    languageLabel:"언어 선택",
-    languageNote:"데모 기본 언어: English. 언제든지 언어를 변경할 수 있습니다.",
-    mobileDemo:"모바일에서는 파일 미리보기보다 웹 링크를 Safari/Chrome에서 여는 것이 가장 안정적입니다.",
-    start:"시작 ▶",
-    next:"계속 →",
-    retry:"다시 시도",
-    blocked:"다음 단계로 넘어가려면 정답을 선택해야 합니다.",
-    confirm:"✅ 서류 확인",
-    safe:"✅ 안전한 선택!",
-    risk:"⚠️ 위험한 선택!",
-    finalReward:"📕 최종 보상",
-    finalDesc:"5/5 규칙 잠금 해제 — 알렉스는 이제 베트남 도로에 더 잘 준비되었습니다.",
-    replay:"↺ 다시 시작",
-    footer:"데모 목업 — 교육용 콘텐츠이며 공식 법률 안내를 대체하지 않습니다.",
-    tipStamp:"🇻🇳 베트남 생존 팁 잠금 해제",
-    tipClose:"가이드북에 저장 📖",
-    stop:"🛑 정지",
-    go:"🏍️ 출발"
-  },
-  ja:{
-    brand:"ベトナムのアレックス",
-    coverDesc:"アレックスと地元の友人ミンの初日の旅を通して、外国人旅行者がベトナムの交通を学ぶ5ステージのミニゲームです。",
-    castAlex:"旅行者",
-    castMinh:"地元の友人",
-    languageLabel:"言語を選択",
-    languageNote:"デモの初期設定は English です。いつでも言語を変更できます。",
-    mobileDemo:"モバイルではファイルプレビューではなく、WebリンクをSafari/Chromeで開くのが最も安定します。",
-    start:"スタート ▶",
-    next:"続ける →",
-    retry:"もう一度",
-    blocked:"次のレベルに進むには正しい答えを選ぶ必要があります。",
-    confirm:"✅ 書類を確認",
-    safe:"✅ 安全な選択！",
-    risk:"⚠️ 危険な選択！",
-    finalReward:"📕 最終報酬",
-    finalDesc:"5/5ルールを解除 — アレックスはベトナムの道路によりよく備えました。",
-    replay:"↺ もう一度",
-    footer:"デモ用モックアップ — 教育目的であり、正式な法的ガイダンスに代わるものではありません。",
-    tipStamp:"🇻🇳 ベトナム・サバイバル・ヒント解除",
-    tipClose:"ガイドブックに保存 📖",
-    stop:"🛑 停止",
-    go:"🏍️ 進む"
-  },
-  zh:{
-    brand:"Alex 在越南",
-    coverDesc:"通过 Alex 与当地朋友 Minh 的第一天旅程，用 5 个关卡帮助外国游客了解如何在越南安全参与交通。",
-    castAlex:"游客",
-    castMinh:"当地朋友",
-    languageLabel:"选择语言",
-    languageNote:"演示默认语言：English。您可以随时切换语言。",
-    mobileDemo:"手机演示建议通过网页链接在 Safari/Chrome 中打开，而不是使用文件预览。",
-    start:"开始 ▶",
-    next:"继续 →",
-    retry:"再试一次",
-    blocked:"必须选择正确答案后才能进入下一关。",
-    confirm:"✅ 确认驾照文件",
-    safe:"✅ 安全选择！",
-    risk:"⚠️ 风险选择！",
-    finalReward:"📕 最终奖励",
-    finalDesc:"已解锁 5/5 条规则 — Alex 已更好地准备好体验越南街道。",
-    replay:"↺ 再玩一次",
-    footer:"演示模型 — 仅供教育用途，不替代正式法律指引。",
-    tipStamp:"🇻🇳 越南交通生存提示已解锁",
-    tipClose:"保存到指南 📖",
-    stop:"🛑 停止",
-    go:"🏍️ 前进"
-  },
-  fr:{
-    brand:"Alex au Vietnam",
-    coverDesc:"Un mini-jeu en 5 niveaux qui aide les visiteurs étrangers à comprendre la circulation au Vietnam à travers la première journée d'Alex avec son ami local Minh.",
-    castAlex:"Voyageur",
-    castMinh:"Ami local",
-    languageLabel:"Choisir la langue",
-    languageNote:"Langue par défaut de la démo : English. Vous pouvez changer de langue à tout moment.",
-    mobileDemo:"Pour une démo mobile fiable, ouvrez le jeu dans Safari/Chrome via un lien web plutôt que dans l’aperçu d’un fichier.",
-    start:"Commencer ▶",
-    next:"Continuer →",
-    retry:"RÉESSAYER",
-    blocked:"Vous devez choisir la bonne réponse avant de passer au niveau suivant.",
-    confirm:"✅ Confirmer les documents",
-    safe:"✅ Choix sûr !",
-    risk:"⚠️ Choix risqué !",
-    finalReward:"📕 Récompense finale",
-    finalDesc:"5/5 règles débloquées — Alex est désormais mieux préparé pour les rues du Vietnam.",
-    replay:"↺ Rejouer",
-    footer:"Maquette de démonstration — contenu éducatif uniquement, ne remplace pas les textes officiels.",
-    tipStamp:"🇻🇳 Conseil de survie au Vietnam débloqué",
-    tipClose:"Ajouter au guide 📖",
-    stop:"🛑 STOP",
-    go:"🏍️ GO"
-  }
-};
-
-
-const LEVELS = {
-en:[
-{
- title:"Welcome to Vietnam", scene:1,
- dialogue:[
-  {who:"alex",text:"Minh, how am I supposed to cross THAT?!"},
-  {who:"minh",text:"Don't rush into traffic. Find a pedestrian crossing, overpass, underpass, or traffic light — and follow the signal."}
- ],
- type:"choice",
- options:[
-  {text:"Run between the motorbikes when you see a gap",tag:"A",correct:false,fb:"Very risky. Traffic can move unpredictably, and running between vehicles gives drivers little time to react."},
-  {text:"Stand in the road and wave your hand so motorbikes stop",tag:"B",correct:false,fb:"A hand signal does not guarantee that vehicles can or will stop safely."},
-  {text:"Find the nearest crossing / traffic signal / pedestrian bridge and follow the signal",tag:"C",correct:true,fb:"Correct. Use designated pedestrian facilities when available and follow traffic signals."}
- ],
- tip:"Find a proper crossing and follow the traffic signals."
-},
-{
- title:"Rent a Motorbike", scene:2,
- dialogue:[
-  {who:"alex",text:"Motorbike Rental — 150,000 VND/day. I have my driving licence from home. Can I ride?"},
-  {who:"minh",text:"Before you rent one, let's check whether your documents are valid for riding in Vietnam."}
- ],
- type:"checklist",
- checkItems:[
-  {id:"nat",label:"🪪 National driving licence"},
-  {id:"idp",label:"🪪 International Driving Permit valid for use in Vietnam"},
-  {id:"class",label:"🏍️ Vehicle category on the licence matches the motorbike you want to rent"}
- ],
- checklistCorrect:["nat","idp","class"],
- fbGood:"Good. Before riding, Alex should check the required licence documents and make sure the permitted vehicle class matches the motorbike.",
- fbBad:"Not enough yet. Alex should verify all required licence documents and the permitted vehicle class before riding.",
- tip:"Check whether your driving licence is legally valid before renting a motorbike."
-},
-{
- title:"Vietnamese Intersection",scene:3,
- dialogue:[
-  {who:"minh",text:"🔴 The light is red, but the road looks pretty empty right now…"},
-  {who:"alex",text:"That guy went. Should I follow him?"}
- ],
- type:"countdown",correctChoice:"STOP",
- fbGood:"Correct. Red means stop — even when the road looks empty and other people are going through.",
- fbBad:"Going through a red light is unsafe and can violate traffic rules, even when the road seems empty.",
- tip:"Red means stop — even when the road looks empty."
-},
-{
- title:"Beer with Dinner",scene:4,
- dialogue:[
-  {who:"alex",text:"🍜🍢🍺 ... It's only a short ride back to the hotel, right?"},
-  {who:"minh",text:"If you've been drinking, don't ride — even for a short trip."}
- ],
- type:"choice",
- options:[
-  {text:"🛵 Ride the motorbike back to the hotel",tag:"A",correct:false,fb:"Not a safe choice. If you've been drinking alcohol, do not drive or ride a motorbike yourself."},
-  {text:"🚕 Book a car or other safe ride back",tag:"B",correct:true,fb:"Good choice. Alex can get back to the hotel without driving after drinking."},
-  {text:"🚶 Walk back if the hotel is nearby",tag:"C",correct:false,fb:"Walking may be reasonable in some places, but only if the route is genuinely safe and appropriate. A safe ride is usually the clearer option for a visitor at night."}
- ],
- tip:"If you drink, don't ride."
-},
-{
- title:"Motorbike Taxi / Passenger",scene:5,
- dialogue:[
-  {who:"minh",text:"The motorbike taxi driver hands Alex a helmet."},
-  {who:"alex",text:"I'm only the passenger. Do I really need this?"}
- ],
- type:"choice",
- options:[
-  {text:"No, I'm only sitting on the back",tag:"A",correct:false,fb:"Incorrect. Helmet requirements apply to passengers as well as riders."},
-  {text:"Yes. Put on the helmet and fasten the strap properly",tag:"B",correct:true,fb:"Correct. A motorbike passenger should also wear a proper helmet and fasten it correctly."}
- ],
- tip:"Passenger? Helmet on."
-}
-],
-vi:[
-{
- title:"Chào mừng đến Việt Nam",scene:1,
- dialogue:[
-  {who:"alex",text:"Minh, làm sao tôi có thể qua con đường NÀY đây?!"},
-  {who:"minh",text:"Đừng chạy liều. Hãy tìm vạch qua đường, cầu vượt, hầm hoặc đèn tín hiệu rồi đi theo đúng tín hiệu."}
- ],
- type:"choice",
- options:[
-  {text:"Chạy len giữa các xe máy khi thấy khe hở",tag:"A",correct:false,fb:"Rất rủi ro. Dòng xe có thể thay đổi khó đoán và người lái có ít thời gian phản ứng."},
-  {text:"Đứng dưới lòng đường và vẫy tay để xe dừng",tag:"B",correct:false,fb:"Vẫy tay không đảm bảo phương tiện có thể hoặc sẽ dừng an toàn."},
-  {text:"Tìm vạch qua đường / đèn tín hiệu / cầu vượt gần nhất và làm theo tín hiệu",tag:"C",correct:true,fb:"Chính xác. Khi có hạ tầng dành cho người đi bộ, hãy sử dụng và tuân thủ tín hiệu."}
- ],
- tip:"Tìm vị trí qua đường phù hợp và tuân thủ tín hiệu giao thông."
-},
-{
- title:"Thuê xe máy",scene:2,
- dialogue:[
-  {who:"alex",text:"Thuê xe máy — 150.000 VND/ngày. Tôi có bằng lái ở nước mình. Tôi lái được chứ?"},
-  {who:"minh",text:"Trước khi thuê, hãy kiểm tra giấy tờ của cậu có hợp lệ để lái xe ở Việt Nam không."}
- ],
- type:"checklist",
- checkItems:[
-  {id:"nat",label:"🪪 Giấy phép lái xe quốc gia"},
-  {id:"idp",label:"🪪 Giấy phép lái xe quốc tế hợp lệ để sử dụng tại Việt Nam"},
-  {id:"class",label:"🏍️ Hạng xe trên giấy phép phù hợp với xe định thuê"}
- ],
- checklistCorrect:["nat","idp","class"],
- fbGood:"Tốt. Trước khi lái xe, Alex cần kiểm tra đầy đủ giấy tờ cần thiết và hạng xe được phép điều khiển.",
- fbBad:"Chưa đủ. Alex cần xác minh đầy đủ giấy tờ và hạng xe được phép điều khiển trước khi thuê.",
- tip:"Kiểm tra giấy phép lái xe có hợp lệ trước khi thuê xe máy."
-},
-{
- title:"Ngã tư ở Việt Nam",scene:3,
- dialogue:[
-  {who:"minh",text:"🔴 Đèn đỏ, nhưng đường lúc này trông khá vắng…"},
-  {who:"alex",text:"Người kia đi rồi. Tôi đi theo được không?"}
- ],
- type:"countdown",correctChoice:"STOP",
- fbGood:"Đúng. Đèn đỏ là dừng — kể cả khi đường vắng và người khác vẫn đi.",
- fbBad:"Đi qua khi đèn đỏ là không an toàn và có thể vi phạm quy định giao thông, kể cả khi đường trông có vẻ vắng.",
- tip:"Đèn đỏ là dừng — kể cả khi đường trông có vẻ vắng."
-},
-{
- title:"Bia trong bữa tối",scene:4,
- dialogue:[
-  {who:"alex",text:"🍜🍢🍺 ... Khách sạn chỉ cách đây một đoạn ngắn thôi mà?"},
-  {who:"minh",text:"Nếu đã uống rượu bia thì đừng tự lái xe — kể cả quãng đường ngắn."}
- ],
- type:"choice",
- options:[
-  {text:"🛵 Tự lái xe máy về khách sạn",tag:"A",correct:false,fb:"Không an toàn. Nếu đã uống rượu bia thì không nên tự điều khiển phương tiện."},
-  {text:"🚕 Đặt xe ô tô hoặc phương án di chuyển an toàn khác",tag:"B",correct:true,fb:"Lựa chọn tốt. Alex có thể về khách sạn mà không cần tự lái sau khi uống bia."},
-  {text:"🚶 Đi bộ nếu khách sạn gần",tag:"C",correct:false,fb:"Đi bộ có thể phù hợp ở một số nơi, nhưng chỉ khi tuyến đường thực sự an toàn và phù hợp."}
- ],
- tip:"Đã uống rượu bia thì không tự lái xe."
-},
-{
- title:"Xe máy công nghệ / Hành khách",scene:5,
- dialogue:[
-  {who:"minh",text:"Tài xế xe máy công nghệ đưa cho Alex một chiếc mũ bảo hiểm."},
-  {who:"alex",text:"Tôi chỉ là người ngồi sau. Có thực sự cần đội không?"}
- ],
- type:"choice",
- options:[
-  {text:"Không cần, tôi chỉ ngồi phía sau",tag:"A",correct:false,fb:"Sai. Yêu cầu đội mũ áp dụng cho cả người điều khiển và người ngồi sau."},
-  {text:"Có. Đội mũ và cài quai đúng cách trước khi đi",tag:"B",correct:true,fb:"Chính xác. Người ngồi sau xe máy cũng cần đội mũ bảo hiểm phù hợp và cài quai đúng cách."}
- ],
- tip:"Ngồi sau xe máy? Hãy đội mũ bảo hiểm."
-}
-],
-ko:[
-{
- title:"베트남에 오신 것을 환영합니다",scene:1,
- dialogue:[{who:"alex",text:"Minh, 저 길을 어떻게 건너야 해?!"},{who:"minh",text:"차 사이로 뛰지 마. 횡단보도, 육교, 지하도 또는 신호등을 찾아 신호를 따라가."}],
- type:"choice",
- options:[
-  {text:"오토바이 사이에 틈이 보이면 뛰어간다",tag:"A",correct:false,fb:"매우 위험합니다. 차량의 움직임은 예측하기 어렵고 운전자가 반응할 시간이 부족할 수 있습니다."},
-  {text:"도로에 서서 손을 흔들어 오토바이를 멈춘다",tag:"B",correct:false,fb:"손짓만으로 차량이 안전하게 멈춘다고 보장할 수 없습니다."},
-  {text:"가까운 횡단보도 / 신호등 / 보행자 시설을 찾아 신호를 따른다",tag:"C",correct:true,fb:"맞습니다. 보행자 시설이 있으면 이용하고 교통 신호를 따르세요."}
- ],
- tip:"적절한 횡단 장소를 찾고 교통 신호를 따르세요."
-},
-{
- title:"오토바이 대여",scene:2,
- dialogue:[{who:"alex",text:"오토바이 대여 — 하루 150,000 VND. 내 나라 면허가 있는데 탈 수 있어?"},{who:"minh",text:"대여하기 전에 베트남에서 운전할 수 있는 유효한 서류인지 먼저 확인하자."}],
- type:"checklist",
- checkItems:[{id:"nat",label:"🪪 국가 운전면허증"},{id:"idp",label:"🪪 베트남에서 사용할 수 있는 유효한 국제운전면허증"},{id:"class",label:"🏍️ 면허의 차량 등급이 대여하려는 오토바이와 일치"}],
- checklistCorrect:["nat","idp","class"],
- fbGood:"좋아요. 운전하기 전에 필요한 면허 서류와 허용된 차량 등급을 모두 확인하세요.",
- fbBad:"아직 충분하지 않습니다. 필요한 서류와 허용 차량 등급을 모두 확인해야 합니다.",
- tip:"오토바이를 빌리기 전에 운전면허가 법적으로 유효한지 확인하세요."
-},
-{
- title:"베트남 교차로",scene:3,
- dialogue:[{who:"minh",text:"🔴 빨간불이야. 그런데 길이 꽤 비어 보이네…"},{who:"alex",text:"저 사람은 갔는데, 나도 따라가도 돼?"}],
- type:"countdown",correctChoice:"STOP",
- fbGood:"맞아요. 빨간불은 정지입니다. 길이 비어 보여도, 다른 사람이 지나가도 멈춰야 합니다.",
- fbBad:"빨간불에 통과하는 것은 위험하며 교통법규 위반이 될 수 있습니다.",
- tip:"빨간불은 정지 — 길이 비어 보여도 마찬가지입니다."
-},
-{
- title:"저녁 식사와 맥주",scene:4,
- dialogue:[{who:"alex",text:"🍜🍢🍺 ... 호텔까지 아주 가까운데?"},{who:"minh",text:"술을 마셨다면 짧은 거리라도 직접 운전하지 마."}],
- type:"choice",
- options:[
-  {text:"🛵 오토바이를 직접 타고 호텔로 간다",tag:"A",correct:false,fb:"안전하지 않습니다. 술을 마셨다면 직접 운전하지 마세요."},
-  {text:"🚕 자동차 호출 서비스나 다른 안전한 교통수단을 이용한다",tag:"B",correct:true,fb:"좋은 선택입니다. 술을 마신 뒤 직접 운전하지 않고 호텔로 갈 수 있습니다."},
-  {text:"🚶 호텔이 가까우면 걸어간다",tag:"C",correct:false,fb:"보행로가 실제로 안전하고 적절한 경우에만 고려하세요."}
- ],
- tip:"술을 마셨다면 운전하지 마세요."
-},
-{
- title:"오토바이 택시 / 승객",scene:5,
- dialogue:[{who:"minh",text:"오토바이 택시 기사가 Alex에게 헬멧을 건넵니다."},{who:"alex",text:"나는 승객일 뿐인데 꼭 써야 해?"}],
- type:"choice",
- options:[
-  {text:"아니요. 나는 뒤에 앉기만 한다",tag:"A",correct:false,fb:"틀렸습니다. 승객도 헬멧을 착용해야 합니다."},
-  {text:"네. 헬멧을 쓰고 끈을 제대로 잠근다",tag:"B",correct:true,fb:"맞습니다. 오토바이 승객도 헬멧을 올바르게 착용해야 합니다."}
- ],
- tip:"승객도 헬멧을 착용하세요."
-}
-],
-ja:[
-{
- title:"ベトナムへようこそ",scene:1,
- dialogue:[{who:"alex",text:"Minh、あの道路をどうやって渡ればいいの?!"},{who:"minh",text:"車の間を走らないで。横断歩道、歩道橋、地下道、信号を探して指示に従おう。"}],
- type:"choice",
- options:[
-  {text:"バイクの隙間を見つけて走って渡る",tag:"A",correct:false,fb:"とても危険です。車両の動きは予測しにくく、運転者が反応する時間がありません。"},
-  {text:"道路に立って手を振り、バイクを止める",tag:"B",correct:false,fb:"手を振るだけでは車両が安全に停止するとは限りません。"},
-  {text:"最寄りの横断歩道 / 信号 / 歩行者施設を探して信号に従う",tag:"C",correct:true,fb:"正解です。歩行者施設がある場合は利用し、交通信号に従いましょう。"}
- ],
- tip:"適切な横断場所を探し、交通信号に従いましょう。"
-},
-{
- title:"バイクを借りる",scene:2,
- dialogue:[{who:"alex",text:"バイクレンタル — 1日150,000 VND。自国の免許があるけど乗れる?"},{who:"minh",text:"借りる前に、ベトナムで運転できる有効な書類か確認しよう。"}],
- type:"checklist",
- checkItems:[{id:"nat",label:"🪪 自国の運転免許証"},{id:"idp",label:"🪪 ベトナムで有効な国際運転免許証"},{id:"class",label:"🏍️ 免許の車両区分が借りるバイクに適合"}],
- checklistCorrect:["nat","idp","class"],
- fbGood:"いいですね。必要な免許書類と運転できる車両区分を確認しましょう。",
- fbBad:"まだ不十分です。必要な書類と車両区分をすべて確認してください。",
- tip:"バイクを借りる前に、免許が法的に有効か確認しましょう。"
-},
-{
- title:"ベトナムの交差点",scene:3,
- dialogue:[{who:"minh",text:"🔴 赤信号。でも道路はかなり空いているね…"},{who:"alex",text:"あの人は行ったよ。僕も行っていい?"}],
- type:"countdown",correctChoice:"STOP",
- fbGood:"正解。赤信号は停止です。道路が空いていても、他の人が進んでも停止します。",
- fbBad:"赤信号を通過するのは危険で、交通規則違反になる可能性があります。",
- tip:"赤信号は停止 — 道路が空いていても同じです。"
-},
-{
- title:"夕食とビール",scene:4,
- dialogue:[{who:"alex",text:"🍜🍢🍺 ... ホテルまですぐそこだよね?"},{who:"minh",text:"飲酒したら、短い距離でも自分で運転しないで。"}],
- type:"choice",
- options:[
-  {text:"🛵 バイクで自分でホテルへ戻る",tag:"A",correct:false,fb:"安全ではありません。飲酒した場合は自分で運転しないでください。"},
-  {text:"🚕 車の配車サービスなど安全な移動手段を利用する",tag:"B",correct:true,fb:"良い選択です。飲酒後に自分で運転せずホテルへ戻れます。"},
-  {text:"🚶 ホテルが近ければ歩く",tag:"C",correct:false,fb:"歩道や経路が本当に安全で適切な場合に限り検討しましょう。"}
- ],
- tip:"飲酒したら運転しない。"
-},
-{
- title:"バイクタクシー / 乗客",scene:5,
- dialogue:[{who:"minh",text:"バイクタクシーの運転手がAlexにヘルメットを渡します。"},{who:"alex",text:"僕は乗客だけど、本当に必要?"}],
- type:"choice",
- options:[
-  {text:"不要。後ろに乗るだけだから",tag:"A",correct:false,fb:"不正解。乗客にもヘルメット着用が必要です。"},
-  {text:"必要。ヘルメットをかぶり、あご紐を正しく締める",tag:"B",correct:true,fb:"正解。バイクの乗客もヘルメットを正しく着用しましょう。"}
- ],
- tip:"乗客もヘルメットを。"
-}
-],
-zh:[
-{
- title:"欢迎来到越南",scene:1,
- dialogue:[{who:"alex",text:"Minh，我到底该怎么过那条路?!"},{who:"minh",text:"不要在车流中乱跑。寻找人行横道、天桥、地下通道或交通信号，并按信号通行。"}],
- type:"choice",
- options:[
-  {text:"看到摩托车之间有空隙就跑过去",tag:"A",correct:false,fb:"非常危险。车辆移动难以预测，驾驶员可能没有足够时间反应。"},
-  {text:"站在道路上挥手让摩托车停车",tag:"B",correct:false,fb:"挥手并不能保证车辆能够安全停车。"},
-  {text:"寻找最近的人行横道 / 信号灯 / 行人设施并遵守信号",tag:"C",correct:true,fb:"正确。有行人设施时应优先使用，并遵守交通信号。"}
- ],
- tip:"寻找合适的过街地点并遵守交通信号。"
-},
-{
- title:"租摩托车",scene:2,
- dialogue:[{who:"alex",text:"摩托车出租 — 150,000 VND/天。我有本国驾照，可以骑吗?"},{who:"minh",text:"租车前先确认你的证件是否允许你在越南驾驶。"}],
- type:"checklist",
- checkItems:[{id:"nat",label:"🪪 本国驾驶证"},{id:"idp",label:"🪪 可在越南使用的有效国际驾驶许可"},{id:"class",label:"🏍️ 驾驶证准驾车型与要租的摩托车相符"}],
- checklistCorrect:["nat","idp","class"],
- fbGood:"很好。驾驶前应检查所需的驾照文件，并确认准驾车型与车辆相符。",
- fbBad:"还不够。请确认所有必要证件和准驾车型。",
- tip:"租摩托车前确认驾驶证在法律上有效。"
-},
-{
- title:"越南路口",scene:3,
- dialogue:[{who:"minh",text:"🔴 红灯。不过现在路上看起来很空…"},{who:"alex",text:"那个人过去了，我也可以跟着走吗?"}],
- type:"countdown",correctChoice:"STOP",
- fbGood:"正确。红灯就是停车，即使道路很空、别人正在通过也一样。",
- fbBad:"闯红灯不安全，也可能违反交通规则。",
- tip:"红灯就是停车 — 即使道路看起来很空。"
-},
-{
- title:"晚餐与啤酒",scene:4,
- dialogue:[{who:"alex",text:"🍜🍢🍺 ... 酒店就在不远处，对吧?"},{who:"minh",text:"喝了酒就不要自己开车，即使距离很短。"}],
- type:"choice",
- options:[
-  {text:"🛵 自己骑摩托车回酒店",tag:"A",correct:false,fb:"不安全。饮酒后不要自己驾驶车辆。"},
-  {text:"🚕 叫车或选择其他安全交通方式",tag:"B",correct:true,fb:"不错。Alex 可以在饮酒后不自行驾驶，安全回酒店。"},
-  {text:"🚶 如果酒店很近就步行",tag:"C",correct:false,fb:"只有在路线确实安全且适合步行时才考虑。"}
- ],
- tip:"喝酒后不要驾驶。"
-},
-{
- title:"摩托车网约车 / 乘客",scene:5,
- dialogue:[{who:"minh",text:"摩托车网约车司机递给 Alex 一顶头盔。"},{who:"alex",text:"我只是乘客，也真的需要戴吗?"}],
- type:"choice",
- options:[
-  {text:"不用，我只是坐在后面",tag:"A",correct:false,fb:"不正确。乘客也需要佩戴头盔。"},
-  {text:"需要。戴好头盔并正确系紧带子",tag:"B",correct:true,fb:"正确。摩托车乘客也应正确佩戴头盔。"}
- ],
- tip:"乘客也要戴头盔。"
-}
-],
-fr:[
-{
- title:"Bienvenue au Vietnam",scene:1,
- dialogue:[{who:"alex",text:"Minh, comment suis-je censé traverser CETTE rue ?!"},{who:"minh",text:"Ne cours pas entre les véhicules. Cherche un passage piéton, une passerelle, un passage souterrain ou un feu, puis suis le signal."}],
- type:"choice",
- options:[
-  {text:"Courir entre les motos dès qu'il y a un espace",tag:"A",correct:false,fb:"Très risqué. Les mouvements des véhicules peuvent être imprévisibles et les conducteurs ont peu de temps pour réagir."},
-  {text:"Se placer sur la route et faire signe aux motos de s'arrêter",tag:"B",correct:false,fb:"Un geste de la main ne garantit pas que les véhicules puissent s'arrêter en sécurité."},
-  {text:"Chercher le passage piéton / feu / aménagement piéton le plus proche et suivre le signal",tag:"C",correct:true,fb:"Correct. Utilisez les aménagements pour piétons lorsqu'ils sont disponibles et respectez les signaux."}
- ],
- tip:"Trouvez un passage adapté et respectez les feux de circulation."
-},
-{
- title:"Louer une moto",scene:2,
- dialogue:[{who:"alex",text:"Location de moto — 150 000 VND/jour. J'ai mon permis national. Puis-je conduire ?"},{who:"minh",text:"Avant de louer, vérifions si tes documents sont valables pour conduire au Vietnam."}],
- type:"checklist",
- checkItems:[{id:"nat",label:"🪪 Permis de conduire national"},{id:"idp",label:"🪪 Permis de conduire international valable au Vietnam"},{id:"class",label:"🏍️ La catégorie du permis correspond à la moto louée"}],
- checklistCorrect:["nat","idp","class"],
- fbGood:"Bien. Avant de conduire, vérifiez les documents requis et la catégorie de véhicule autorisée.",
- fbBad:"Pas encore suffisant. Vérifiez tous les documents nécessaires et la catégorie autorisée.",
- tip:"Vérifiez que votre permis est légalement valable avant de louer une moto."
-},
-{
- title:"Carrefour vietnamien",scene:3,
- dialogue:[{who:"minh",text:"🔴 Le feu est rouge, mais la route semble presque vide…"},{who:"alex",text:"Cette personne est passée. Je la suis ?"}],
- type:"countdown",correctChoice:"STOP",
- fbGood:"Correct. Rouge signifie arrêt, même si la route semble vide et que d'autres personnes passent.",
- fbBad:"Passer au rouge est dangereux et peut constituer une infraction.",
- tip:"Rouge signifie arrêt — même si la route semble vide."
-},
-{
- title:"Bière au dîner",scene:4,
- dialogue:[{who:"alex",text:"🍜🍢🍺 ... L'hôtel est juste à côté, non ?"},{who:"minh",text:"Si tu as bu, ne conduis pas, même pour une courte distance."}],
- type:"choice",
- options:[
-  {text:"🛵 Revenir à l'hôtel en moto",tag:"A",correct:false,fb:"Ce n'est pas sûr. Après avoir bu de l'alcool, ne conduisez pas vous-même."},
-  {text:"🚕 Réserver une voiture ou utiliser un autre moyen de transport sûr",tag:"B",correct:true,fb:"Bon choix. Alex peut rentrer sans conduire après avoir bu."},
-  {text:"🚶 Marcher si l'hôtel est proche",tag:"C",correct:false,fb:"Cela peut convenir uniquement si l'itinéraire est réellement sûr et adapté à la marche."}
- ],
- tip:"Si vous buvez, ne conduisez pas."
-},
-{
- title:"Moto-taxi / Passager",scene:5,
- dialogue:[{who:"minh",text:"Le conducteur du moto-taxi donne un casque à Alex."},{who:"alex",text:"Je ne suis que passager. J'en ai vraiment besoin ?"}],
- type:"choice",
- options:[
-  {text:"Non, je suis seulement assis derrière",tag:"A",correct:false,fb:"Incorrect. Les passagers doivent également porter un casque."},
-  {text:"Oui. Mettre le casque et attacher correctement la jugulaire",tag:"B",correct:true,fb:"Correct. Un passager de moto doit aussi porter correctement un casque."}
- ],
- tip:"Passager ? Casque obligatoire."
-}
-]
-};
-
-
-let currentLang = 'en';
-let currentLevel = 0;
-let unlocked = [];
-const $ = id => document.getElementById(id);
-
-function applyStaticLanguage(){
-  const u = UI[currentLang];
-  document.documentElement.lang = currentLang;
-  $('brand-text').textContent = u.brand;
-  $('cover-desc').textContent = u.coverDesc;
-  $('cast-alex').textContent = u.castAlex;
-  $('cast-minh').textContent = u.castMinh;
-  $('language-label').textContent = u.languageLabel;
-  $('language-note').textContent = u.languageNote;
-  $('mobile-demo-note').textContent = u.mobileDemo || '';
-  $('start-btn').textContent = u.start;
-  $('lv-next').textContent = u.next;
-  $('final-reward').textContent = u.finalReward;
-  $('final-desc').textContent = u.finalDesc;
-  $('replay-btn').textContent = u.replay;
-  $('footer-note').textContent = u.footer;
-  $('tip-stamp').textContent = u.tipStamp;
-  $('tip-close-btn').textContent = u.tipClose;
-  $('top-language').value = currentLang;
-  $('cover-language').value = currentLang;
-}
-
-function changeLanguage(lang){
-  if(!LEVELS[lang]) return;
-  currentLang = lang;
-  applyStaticLanguage();
-
-  if(!$('screen-level').classList.contains('hidden')){
-    renderLevel();
-  }
-  if(!$('screen-end').classList.contains('hidden')){
-    showEnd();
-  }
-}
-
-function startGame(){
-  $('screen-cover').classList.add('hidden');
-  currentLevel = 0;
-  unlocked = [];
-  updateNotebook();
-  renderLevel();
-}
-
-function restartGame(){
-  $('screen-end').classList.add('hidden');
-  $('screen-level').classList.add('hidden');
-  currentLevel = 0;
-  unlocked = [];
-  updateNotebook();
-  $('screen-cover').classList.remove('hidden');
-}
-
-function updateNotebook(){
-  document.querySelectorAll('#notebook .page').forEach(p=>{
-    const i=parseInt(p.dataset.i,10);
-    p.classList.toggle('filled',unlocked.includes(i));
-  });
-}
-
-function renderLevel(){
-  const levels = LEVELS[currentLang];
-  const lv = levels[currentLevel];
-
-  $('screen-level').classList.remove('hidden');
-  $('lv-num').textContent='LEVEL '+(currentLevel+1);
-  $('lv-title').textContent=lv.title;
-  $('lv-progress').textContent=(currentLevel+1)+' / '+levels.length;
-  $('lv-scene').innerHTML=scenes[lv.scene];
-
-  $('lv-dialogue').innerHTML=lv.dialogue.map(d=>
-    `<div class="bubble ${d.who}"><span class="who">${d.who==='alex'?'Alex':'Minh'}</span>${d.text}</div>`
-  ).join('');
-
-  const fb=$('lv-feedback');
-  fb.style.display='none';
-  fb.className='feedback';
-  $('lv-next').style.display='none';
-  $('lv-next').textContent=UI[currentLang].next;
-
-  const box=$('lv-interactive');
-  box.innerHTML='';
-
-  if(lv.type==='choice'){
-    const wrap=document.createElement('div');
-    wrap.className='choices';
-    lv.options.forEach(opt=>{
-      const btn=document.createElement('button');
-      btn.className='choice-btn';
-      btn.innerHTML=`<span class="tag">${opt.tag}</span>${opt.text}`;
-      btn.onclick=()=>handleChoiceResult(opt.correct,opt.fb,wrap);
-      wrap.appendChild(btn);
-    });
-    box.appendChild(wrap);
-  }
-
-  if(lv.type==='checklist'){
-    const wrap=document.createElement('div');
-    wrap.className='checklist';
-    lv.checkItems.forEach(item=>{
-      const label=document.createElement('label');
-      label.className='check-item';
-      label.innerHTML=`<input type="checkbox" value="${item.id}"> ${item.label}`;
-      wrap.appendChild(label);
-    });
-    box.appendChild(wrap);
-
-    const submit=document.createElement('button');
-    submit.className='choice-btn checklist-submit';
-    submit.style.textAlign='center';
-    submit.style.fontFamily="'Baloo 2'";
-    submit.textContent=UI[currentLang].confirm;
-    submit.onclick=()=>{
-      const checked=Array.from(wrap.querySelectorAll('input:checked')).map(i=>i.value);
-      const correct=lv.checklistCorrect.every(c=>checked.includes(c)) &&
-                    checked.length===lv.checklistCorrect.length;
-      wrap.querySelectorAll('input').forEach(i=>i.disabled=true);
-      submit.disabled=true;
-      submit.style.opacity=.5;
-      handleChoiceResult(correct,correct?lv.fbGood:lv.fbBad,wrap);
     };
-    box.appendChild(submit);
-  }
 
-  if(lv.type==='countdown'){
-    const wrap=document.createElement('div');
-    wrap.className='countdown-wrap';
-    wrap.innerHTML=`
+
+    const UI = {
+      en: {
+        brand: "Alex in Vietnam",
+        coverDesc: "A 5-level mini-game that helps international visitors learn how to navigate traffic in Vietnam through Alex's first day with his local friend Minh.",
+        castAlex: "Traveler",
+        castMinh: "Local friend",
+        languageLabel: "Choose your language",
+        languageNote: "Demo default: English. You can switch languages at any time.",
+        mobileDemo: "For the best mobile demo, open this game in Safari/Chrome from a web link rather than a file preview.",
+        start: "Start ▶",
+        next: "Continue →",
+        retry: "TRY AGAIN",
+        blocked: "You need to choose the correct answer before you can continue to the next level.",
+        confirm: "✅ Confirm documents",
+        safe: "✅ Safe choice!",
+        risk: "⚠️ Risky choice!",
+        finalReward: "📕 Final Reward",
+        finalDesc: "5/5 rules unlocked — Alex is officially ready for the streets of Vietnam.",
+        replay: "↺ Play again",
+        footer: "Demo mockup — educational content only; it does not replace official legal guidance.",
+        tipStamp: "🇻🇳 Vietnam Survival Tip Unlocked",
+        tipClose: "Save to guidebook 📖",
+        stop: "🛑 STOP",
+        go: "🏍️ GO"
+      },
+      vi: {
+        brand: "Alex ở Việt Nam",
+        coverDesc: "Mini-game 5 màn giúp du khách nước ngoài học cách tham gia giao thông ở Việt Nam qua chuyến đi đầu tiên của Alex cùng người bạn địa phương Minh.",
+        castAlex: "Khách du lịch",
+        castMinh: "Bạn địa phương",
+        languageLabel: "Chọn ngôn ngữ",
+        languageNote: "Bản demo mặc định: English. Bạn có thể đổi ngôn ngữ bất cứ lúc nào.",
+        mobileDemo: "Để demo tốt nhất trên điện thoại, hãy mở game bằng Safari/Chrome từ một đường link web thay vì chế độ xem trước file.",
+        start: "Bắt đầu ▶",
+        next: "Tiếp tục →",
+        retry: "THỬ LẠI",
+        blocked: "Bạn cần chọn đúng đáp án trước khi có thể qua màn tiếp theo.",
+        confirm: "✅ Xác nhận giấy tờ",
+        safe: "✅ An toàn!",
+        risk: "⚠️ Rủi ro!",
+        finalReward: "📕 Phần thưởng cuối",
+        finalDesc: "Đã mở khóa 5/5 quy tắc — Alex đã sẵn sàng hơn cho đường phố Việt Nam.",
+        replay: "↺ Chơi lại từ đầu",
+        footer: "Mockup demo — nội dung giáo dục, không thay thế văn bản pháp luật chính thức.",
+        tipStamp: "🇻🇳 Đã mở khóa Vietnam Survival Tip",
+        tipClose: "Ghi vào sổ tay 📖",
+        stop: "🛑 DỪNG",
+        go: "🏍️ ĐI"
+      },
+      ko: {
+        brand: "베트남의 알렉스",
+        coverDesc: "알렉스와 현지 친구 민의 첫날 여정을 통해 외국인 방문객이 베트남 교통을 이해하도록 돕는 5단계 미니게임입니다.",
+        castAlex: "여행자",
+        castMinh: "현지 친구",
+        languageLabel: "언어 선택",
+        languageNote: "데모 기본 언어: English. 언제든지 언어를 변경할 수 있습니다.",
+        mobileDemo: "모바일에서는 파일 미리보기보다 웹 링크를 Safari/Chrome에서 여는 것이 가장 안정적입니다.",
+        start: "시작 ▶",
+        next: "계속 →",
+        retry: "다시 시도",
+        blocked: "다음 단계로 넘어가려면 정답을 선택해야 합니다.",
+        confirm: "✅ 서류 확인",
+        safe: "✅ 안전한 선택!",
+        risk: "⚠️ 위험한 선택!",
+        finalReward: "📕 최종 보상",
+        finalDesc: "5/5 규칙 잠금 해제 — 알렉스는 이제 베트남 도로에 더 잘 준비되었습니다.",
+        replay: "↺ 다시 시작",
+        footer: "데모 목업 — 교육용 콘텐츠이며 공식 법률 안내를 대체하지 않습니다.",
+        tipStamp: "🇻🇳 베트남 생존 팁 잠금 해제",
+        tipClose: "가이드북에 저장 📖",
+        stop: "🛑 정지",
+        go: "🏍️ 출발"
+      },
+      ja: {
+        brand: "ベトナムのアレックス",
+        coverDesc: "アレックスと地元の友人ミンの初日の旅を通して、外国人旅行者がベトナムの交通を学ぶ5ステージのミニゲームです。",
+        castAlex: "旅行者",
+        castMinh: "地元の友人",
+        languageLabel: "言語を選択",
+        languageNote: "デモの初期設定は English です。いつでも言語を変更できます。",
+        mobileDemo: "モバイルではファイルプレビューではなく、WebリンクをSafari/Chromeで開くのが最も安定します。",
+        start: "スタート ▶",
+        next: "続ける →",
+        retry: "もう一度",
+        blocked: "次のレベルに進むには正しい答えを選ぶ必要があります。",
+        confirm: "✅ 書類を確認",
+        safe: "✅ 安全な選択！",
+        risk: "⚠️ 危険な選択！",
+        finalReward: "📕 最終報酬",
+        finalDesc: "5/5ルールを解除 — アレックスはベトナムの道路によりよく備えました。",
+        replay: "↺ もう一度",
+        footer: "デモ用モックアップ — 教育目的であり、正式な法的ガイダンスに代わるものではありません。",
+        tipStamp: "🇻🇳 ベトナム・サバイバル・ヒント解除",
+        tipClose: "ガイドブックに保存 📖",
+        stop: "🛑 停止",
+        go: "🏍️ 進む"
+      },
+      zh: {
+        brand: "Alex 在越南",
+        coverDesc: "通过 Alex 与当地朋友 Minh 的第一天旅程，用 5 个关卡帮助外国游客了解如何在越南安全参与交通。",
+        castAlex: "游客",
+        castMinh: "当地朋友",
+        languageLabel: "选择语言",
+        languageNote: "演示默认语言：English。您可以随时切换语言。",
+        mobileDemo: "手机演示建议通过网页链接在 Safari/Chrome 中打开，而不是使用文件预览。",
+        start: "开始 ▶",
+        next: "继续 →",
+        retry: "再试一次",
+        blocked: "必须选择正确答案后才能进入下一关。",
+        confirm: "✅ 确认驾照文件",
+        safe: "✅ 安全选择！",
+        risk: "⚠️ 风险选择！",
+        finalReward: "📕 最终奖励",
+        finalDesc: "已解锁 5/5 条规则 — Alex 已更好地准备好体验越南街道。",
+        replay: "↺ 再玩一次",
+        footer: "演示模型 — 仅供教育用途，不替代正式法律指引。",
+        tipStamp: "🇻🇳 越南交通生存提示已解锁",
+        tipClose: "保存到指南 📖",
+        stop: "🛑 停止",
+        go: "🏍️ 前进"
+      },
+      fr: {
+        brand: "Alex au Vietnam",
+        coverDesc: "Un mini-jeu en 5 niveaux qui aide les visiteurs étrangers à comprendre la circulation au Vietnam à travers la première journée d'Alex avec son ami local Minh.",
+        castAlex: "Voyageur",
+        castMinh: "Ami local",
+        languageLabel: "Choisir la langue",
+        languageNote: "Langue par défaut de la démo : English. Vous pouvez changer de langue à tout moment.",
+        mobileDemo: "Pour une démo mobile fiable, ouvrez le jeu dans Safari/Chrome via un lien web plutôt que dans l’aperçu d’un fichier.",
+        start: "Commencer ▶",
+        next: "Continuer →",
+        retry: "RÉESSAYER",
+        blocked: "Vous devez choisir la bonne réponse avant de passer au niveau suivant.",
+        confirm: "✅ Confirmer les documents",
+        safe: "✅ Choix sûr !",
+        risk: "⚠️ Choix risqué !",
+        finalReward: "📕 Récompense finale",
+        finalDesc: "5/5 règles débloquées — Alex est désormais mieux préparé pour les rues du Vietnam.",
+        replay: "↺ Rejouer",
+        footer: "Maquette de démonstration — contenu éducatif uniquement, ne remplace pas les textes officiels.",
+        tipStamp: "🇻🇳 Conseil de survie au Vietnam débloqué",
+        tipClose: "Ajouter au guide 📖",
+        stop: "🛑 STOP",
+        go: "🏍️ GO"
+      }
+    };
+
+
+    const LEVELS = {
+      en: [
+        {
+          title: "Welcome to Vietnam", scene: 1,
+          dialogue: [
+            { who: "alex", text: "Minh, how am I supposed to cross THAT?!" },
+            { who: "minh", text: "Don't rush into traffic. Find a pedestrian crossing, overpass, underpass, or traffic light — and follow the signal." }
+          ],
+          type: "choice",
+          options: [
+            { text: "Run between the motorbikes when you see a gap", tag: "A", correct: false, fb: "Very risky. Traffic can move unpredictably, and running between vehicles gives drivers little time to react." },
+            { text: "Stand in the road and wave your hand so motorbikes stop", tag: "B", correct: false, fb: "A hand signal does not guarantee that vehicles can or will stop safely." },
+            { text: "Find the nearest crossing / traffic signal / pedestrian bridge and follow the signal", tag: "C", correct: true, fb: "Correct. Use designated pedestrian facilities when available and follow traffic signals." }
+          ],
+          tip: "Find a proper crossing and follow the traffic signals."
+        },
+        {
+          title: "Rent a Motorbike", scene: 2,
+          dialogue: [
+            { who: "alex", text: "Motorbike Rental — 150,000 VND/day. I have my driving licence from home. Can I ride?" },
+            { who: "minh", text: "Before you rent one, let's check whether your documents are valid for riding in Vietnam." }
+          ],
+          type: "checklist",
+          checkItems: [
+            { id: "nat", label: "🪪 National driving licence" },
+            { id: "idp", label: "🪪 International Driving Permit valid for use in Vietnam" },
+            { id: "class", label: "🏍️ Vehicle category on the licence matches the motorbike you want to rent" }
+          ],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "Good. Before riding, Alex should check the required licence documents and make sure the permitted vehicle class matches the motorbike.",
+          fbBad: "Not enough yet. Alex should verify all required licence documents and the permitted vehicle class before riding.",
+          tip: "Check whether your driving licence is legally valid before renting a motorbike."
+        },
+        {
+          title: "Vietnamese Intersection", scene: 3,
+          dialogue: [
+            { who: "minh", text: "🔴 The light is red, but the road looks pretty empty right now…" },
+            { who: "alex", text: "That guy went. Should I follow him?" }
+          ],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "Correct. Red means stop — even when the road looks empty and other people are going through.",
+          fbBad: "Going through a red light is unsafe and can violate traffic rules, even when the road seems empty.",
+          tip: "Red means stop — even when the road looks empty."
+        },
+        {
+          title: "Beer with Dinner", scene: 4,
+          dialogue: [
+            { who: "alex", text: "🍜🍢🍺 ... It's only a short ride back to the hotel, right?" },
+            { who: "minh", text: "If you've been drinking, don't ride — even for a short trip." }
+          ],
+          type: "choice",
+          options: [
+            { text: "🛵 Ride the motorbike back to the hotel", tag: "A", correct: false, fb: "Not a safe choice. If you've been drinking alcohol, do not drive or ride a motorbike yourself." },
+            { text: "🚕 Book a car or other safe ride back", tag: "B", correct: true, fb: "Good choice. Alex can get back to the hotel without driving after drinking." },
+            { text: "🚶 Walk back if the hotel is nearby", tag: "C", correct: false, fb: "Walking may be reasonable in some places, but only if the route is genuinely safe and appropriate. A safe ride is usually the clearer option for a visitor at night." }
+          ],
+          tip: "If you drink, don't ride."
+        },
+        {
+          title: "Motorbike Taxi / Passenger", scene: 5,
+          dialogue: [
+            { who: "minh", text: "The motorbike taxi driver hands Alex a helmet." },
+            { who: "alex", text: "I'm only the passenger. Do I really need this?" }
+          ],
+          type: "choice",
+          options: [
+            { text: "No, I'm only sitting on the back", tag: "A", correct: false, fb: "Incorrect. Helmet requirements apply to passengers as well as riders." },
+            { text: "Yes. Put on the helmet and fasten the strap properly", tag: "B", correct: true, fb: "Correct. A motorbike passenger should also wear a proper helmet and fasten it correctly." }
+          ],
+          tip: "Passenger? Helmet on."
+        }
+      ],
+      vi: [
+        {
+          title: "Chào mừng đến Việt Nam", scene: 1,
+          dialogue: [
+            { who: "alex", text: "Minh, làm sao tôi có thể qua con đường NÀY đây?!" },
+            { who: "minh", text: "Đừng chạy liều. Hãy tìm vạch qua đường, cầu vượt, hầm hoặc đèn tín hiệu rồi đi theo đúng tín hiệu." }
+          ],
+          type: "choice",
+          options: [
+            { text: "Chạy len giữa các xe máy khi thấy khe hở", tag: "A", correct: false, fb: "Rất rủi ro. Dòng xe có thể thay đổi khó đoán và người lái có ít thời gian phản ứng." },
+            { text: "Đứng dưới lòng đường và vẫy tay để xe dừng", tag: "B", correct: false, fb: "Vẫy tay không đảm bảo phương tiện có thể hoặc sẽ dừng an toàn." },
+            { text: "Tìm vạch qua đường / đèn tín hiệu / cầu vượt gần nhất và làm theo tín hiệu", tag: "C", correct: true, fb: "Chính xác. Khi có hạ tầng dành cho người đi bộ, hãy sử dụng và tuân thủ tín hiệu." }
+          ],
+          tip: "Tìm vị trí qua đường phù hợp và tuân thủ tín hiệu giao thông."
+        },
+        {
+          title: "Thuê xe máy", scene: 2,
+          dialogue: [
+            { who: "alex", text: "Thuê xe máy — 150.000 VND/ngày. Tôi có bằng lái ở nước mình. Tôi lái được chứ?" },
+            { who: "minh", text: "Trước khi thuê, hãy kiểm tra giấy tờ của cậu có hợp lệ để lái xe ở Việt Nam không." }
+          ],
+          type: "checklist",
+          checkItems: [
+            { id: "nat", label: "🪪 Giấy phép lái xe quốc gia" },
+            { id: "idp", label: "🪪 Giấy phép lái xe quốc tế hợp lệ để sử dụng tại Việt Nam" },
+            { id: "class", label: "🏍️ Hạng xe trên giấy phép phù hợp với xe định thuê" }
+          ],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "Tốt. Trước khi lái xe, Alex cần kiểm tra đầy đủ giấy tờ cần thiết và hạng xe được phép điều khiển.",
+          fbBad: "Chưa đủ. Alex cần xác minh đầy đủ giấy tờ và hạng xe được phép điều khiển trước khi thuê.",
+          tip: "Kiểm tra giấy phép lái xe có hợp lệ trước khi thuê xe máy."
+        },
+        {
+          title: "Ngã tư ở Việt Nam", scene: 3,
+          dialogue: [
+            { who: "minh", text: "🔴 Đèn đỏ, nhưng đường lúc này trông khá vắng…" },
+            { who: "alex", text: "Người kia đi rồi. Tôi đi theo được không?" }
+          ],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "Đúng. Đèn đỏ là dừng — kể cả khi đường vắng và người khác vẫn đi.",
+          fbBad: "Đi qua khi đèn đỏ là không an toàn và có thể vi phạm quy định giao thông, kể cả khi đường trông có vẻ vắng.",
+          tip: "Đèn đỏ là dừng — kể cả khi đường trông có vẻ vắng."
+        },
+        {
+          title: "Bia trong bữa tối", scene: 4,
+          dialogue: [
+            { who: "alex", text: "🍜🍢🍺 ... Khách sạn chỉ cách đây một đoạn ngắn thôi mà?" },
+            { who: "minh", text: "Nếu đã uống rượu bia thì đừng tự lái xe — kể cả quãng đường ngắn." }
+          ],
+          type: "choice",
+          options: [
+            { text: "🛵 Tự lái xe máy về khách sạn", tag: "A", correct: false, fb: "Không an toàn. Nếu đã uống rượu bia thì không nên tự điều khiển phương tiện." },
+            { text: "🚕 Đặt xe ô tô hoặc phương án di chuyển an toàn khác", tag: "B", correct: true, fb: "Lựa chọn tốt. Alex có thể về khách sạn mà không cần tự lái sau khi uống bia." },
+            { text: "🚶 Đi bộ nếu khách sạn gần", tag: "C", correct: false, fb: "Đi bộ có thể phù hợp ở một số nơi, nhưng chỉ khi tuyến đường thực sự an toàn và phù hợp." }
+          ],
+          tip: "Đã uống rượu bia thì không tự lái xe."
+        },
+        {
+          title: "Xe máy công nghệ / Hành khách", scene: 5,
+          dialogue: [
+            { who: "minh", text: "Tài xế xe máy công nghệ đưa cho Alex một chiếc mũ bảo hiểm." },
+            { who: "alex", text: "Tôi chỉ là người ngồi sau. Có thực sự cần đội không?" }
+          ],
+          type: "choice",
+          options: [
+            { text: "Không cần, tôi chỉ ngồi phía sau", tag: "A", correct: false, fb: "Sai. Yêu cầu đội mũ áp dụng cho cả người điều khiển và người ngồi sau." },
+            { text: "Có. Đội mũ và cài quai đúng cách trước khi đi", tag: "B", correct: true, fb: "Chính xác. Người ngồi sau xe máy cũng cần đội mũ bảo hiểm phù hợp và cài quai đúng cách." }
+          ],
+          tip: "Ngồi sau xe máy? Hãy đội mũ bảo hiểm."
+        }
+      ],
+      ko: [
+        {
+          title: "베트남에 오신 것을 환영합니다", scene: 1,
+          dialogue: [{ who: "alex", text: "Minh, 저 길을 어떻게 건너야 해?!" }, { who: "minh", text: "차 사이로 뛰지 마. 횡단보도, 육교, 지하도 또는 신호등을 찾아 신호를 따라가." }],
+          type: "choice",
+          options: [
+            { text: "오토바이 사이에 틈이 보이면 뛰어간다", tag: "A", correct: false, fb: "매우 위험합니다. 차량의 움직임은 예측하기 어렵고 운전자가 반응할 시간이 부족할 수 있습니다." },
+            { text: "도로에 서서 손을 흔들어 오토바이를 멈춘다", tag: "B", correct: false, fb: "손짓만으로 차량이 안전하게 멈춘다고 보장할 수 없습니다." },
+            { text: "가까운 횡단보도 / 신호등 / 보행자 시설을 찾아 신호를 따른다", tag: "C", correct: true, fb: "맞습니다. 보행자 시설이 있으면 이용하고 교통 신호를 따르세요." }
+          ],
+          tip: "적절한 횡단 장소를 찾고 교통 신호를 따르세요."
+        },
+        {
+          title: "오토바이 대여", scene: 2,
+          dialogue: [{ who: "alex", text: "오토바이 대여 — 하루 150,000 VND. 내 나라 면허가 있는데 탈 수 있어?" }, { who: "minh", text: "대여하기 전에 베트남에서 운전할 수 있는 유효한 서류인지 먼저 확인하자." }],
+          type: "checklist",
+          checkItems: [{ id: "nat", label: "🪪 국가 운전면허증" }, { id: "idp", label: "🪪 베트남에서 사용할 수 있는 유효한 국제운전면허증" }, { id: "class", label: "🏍️ 면허의 차량 등급이 대여하려는 오토바이와 일치" }],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "좋아요. 운전하기 전에 필요한 면허 서류와 허용된 차량 등급을 모두 확인하세요.",
+          fbBad: "아직 충분하지 않습니다. 필요한 서류와 허용 차량 등급을 모두 확인해야 합니다.",
+          tip: "오토바이를 빌리기 전에 운전면허가 법적으로 유효한지 확인하세요."
+        },
+        {
+          title: "베트남 교차로", scene: 3,
+          dialogue: [{ who: "minh", text: "🔴 빨간불이야. 그런데 길이 꽤 비어 보이네…" }, { who: "alex", text: "저 사람은 갔는데, 나도 따라가도 돼?" }],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "맞아요. 빨간불은 정지입니다. 길이 비어 보여도, 다른 사람이 지나가도 멈춰야 합니다.",
+          fbBad: "빨간불에 통과하는 것은 위험하며 교통법규 위반이 될 수 있습니다.",
+          tip: "빨간불은 정지 — 길이 비어 보여도 마찬가지입니다."
+        },
+        {
+          title: "저녁 식사와 맥주", scene: 4,
+          dialogue: [{ who: "alex", text: "🍜🍢🍺 ... 호텔까지 아주 가까운데?" }, { who: "minh", text: "술을 마셨다면 짧은 거리라도 직접 운전하지 마." }],
+          type: "choice",
+          options: [
+            { text: "🛵 오토바이를 직접 타고 호텔로 간다", tag: "A", correct: false, fb: "안전하지 않습니다. 술을 마셨다면 직접 운전하지 마세요." },
+            { text: "🚕 자동차 호출 서비스나 다른 안전한 교통수단을 이용한다", tag: "B", correct: true, fb: "좋은 선택입니다. 술을 마신 뒤 직접 운전하지 않고 호텔로 갈 수 있습니다." },
+            { text: "🚶 호텔이 가까우면 걸어간다", tag: "C", correct: false, fb: "보행로가 실제로 안전하고 적절한 경우에만 고려하세요." }
+          ],
+          tip: "술을 마셨다면 운전하지 마세요."
+        },
+        {
+          title: "오토바이 택시 / 승객", scene: 5,
+          dialogue: [{ who: "minh", text: "오토바이 택시 기사가 Alex에게 헬멧을 건넵니다." }, { who: "alex", text: "나는 승객일 뿐인데 꼭 써야 해?" }],
+          type: "choice",
+          options: [
+            { text: "아니요. 나는 뒤에 앉기만 한다", tag: "A", correct: false, fb: "틀렸습니다. 승객도 헬멧을 착용해야 합니다." },
+            { text: "네. 헬멧을 쓰고 끈을 제대로 잠근다", tag: "B", correct: true, fb: "맞습니다. 오토바이 승객도 헬멧을 올바르게 착용해야 합니다." }
+          ],
+          tip: "승객도 헬멧을 착용하세요."
+        }
+      ],
+      ja: [
+        {
+          title: "ベトナムへようこそ", scene: 1,
+          dialogue: [{ who: "alex", text: "Minh、あの道路をどうやって渡ればいいの?!" }, { who: "minh", text: "車の間を走らないで。横断歩道、歩道橋、地下道、信号を探して指示に従おう。" }],
+          type: "choice",
+          options: [
+            { text: "バイクの隙間を見つけて走って渡る", tag: "A", correct: false, fb: "とても危険です。車両の動きは予測しにくく、運転者が反応する時間がありません。" },
+            { text: "道路に立って手を振り、バイクを止める", tag: "B", correct: false, fb: "手を振るだけでは車両が安全に停止するとは限りません。" },
+            { text: "最寄りの横断歩道 / 信号 / 歩行者施設を探して信号に従う", tag: "C", correct: true, fb: "正解です。歩行者施設がある場合は利用し、交通信号に従いましょう。" }
+          ],
+          tip: "適切な横断場所を探し、交通信号に従いましょう。"
+        },
+        {
+          title: "バイクを借りる", scene: 2,
+          dialogue: [{ who: "alex", text: "バイクレンタル — 1日150,000 VND。自国の免許があるけど乗れる?" }, { who: "minh", text: "借りる前に、ベトナムで運転できる有効な書類か確認しよう。" }],
+          type: "checklist",
+          checkItems: [{ id: "nat", label: "🪪 自国の運転免許証" }, { id: "idp", label: "🪪 ベトナムで有効な国際運転免許証" }, { id: "class", label: "🏍️ 免許の車両区分が借りるバイクに適合" }],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "いいですね。必要な免許書類と運転できる車両区分を確認しましょう。",
+          fbBad: "まだ不十分です。必要な書類と車両区分をすべて確認してください。",
+          tip: "バイクを借りる前に、免許が法的に有効か確認しましょう。"
+        },
+        {
+          title: "ベトナムの交差点", scene: 3,
+          dialogue: [{ who: "minh", text: "🔴 赤信号。でも道路はかなり空いているね…" }, { who: "alex", text: "あの人は行ったよ。僕も行っていい?" }],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "正解。赤信号は停止です。道路が空いていても、他の人が進んでも停止します。",
+          fbBad: "赤信号を通過するのは危険で、交通規則違反になる可能性があります。",
+          tip: "赤信号は停止 — 道路が空いていても同じです。"
+        },
+        {
+          title: "夕食とビール", scene: 4,
+          dialogue: [{ who: "alex", text: "🍜🍢🍺 ... ホテルまですぐそこだよね?" }, { who: "minh", text: "飲酒したら、短い距離でも自分で運転しないで。" }],
+          type: "choice",
+          options: [
+            { text: "🛵 バイクで自分でホテルへ戻る", tag: "A", correct: false, fb: "安全ではありません。飲酒した場合は自分で運転しないでください。" },
+            { text: "🚕 車の配車サービスなど安全な移動手段を利用する", tag: "B", correct: true, fb: "良い選択です。飲酒後に自分で運転せずホテルへ戻れます。" },
+            { text: "🚶 ホテルが近ければ歩く", tag: "C", correct: false, fb: "歩道や経路が本当に安全で適切な場合に限り検討しましょう。" }
+          ],
+          tip: "飲酒したら運転しない。"
+        },
+        {
+          title: "バイクタクシー / 乗客", scene: 5,
+          dialogue: [{ who: "minh", text: "バイクタクシーの運転手がAlexにヘルメットを渡します。" }, { who: "alex", text: "僕は乗客だけど、本当に必要?" }],
+          type: "choice",
+          options: [
+            { text: "不要。後ろに乗るだけだから", tag: "A", correct: false, fb: "不正解。乗客にもヘルメット着用が必要です。" },
+            { text: "必要。ヘルメットをかぶり、あご紐を正しく締める", tag: "B", correct: true, fb: "正解。バイクの乗客もヘルメットを正しく着用しましょう。" }
+          ],
+          tip: "乗客もヘルメットを。"
+        }
+      ],
+      zh: [
+        {
+          title: "欢迎来到越南", scene: 1,
+          dialogue: [{ who: "alex", text: "Minh，我到底该怎么过那条路?!" }, { who: "minh", text: "不要在车流中乱跑。寻找人行横道、天桥、地下通道或交通信号，并按信号通行。" }],
+          type: "choice",
+          options: [
+            { text: "看到摩托车之间有空隙就跑过去", tag: "A", correct: false, fb: "非常危险。车辆移动难以预测，驾驶员可能没有足够时间反应。" },
+            { text: "站在道路上挥手让摩托车停车", tag: "B", correct: false, fb: "挥手并不能保证车辆能够安全停车。" },
+            { text: "寻找最近的人行横道 / 信号灯 / 行人设施并遵守信号", tag: "C", correct: true, fb: "正确。有行人设施时应优先使用，并遵守交通信号。" }
+          ],
+          tip: "寻找合适的过街地点并遵守交通信号。"
+        },
+        {
+          title: "租摩托车", scene: 2,
+          dialogue: [{ who: "alex", text: "摩托车出租 — 150,000 VND/天。我有本国驾照，可以骑吗?" }, { who: "minh", text: "租车前先确认你的证件是否允许你在越南驾驶。" }],
+          type: "checklist",
+          checkItems: [{ id: "nat", label: "🪪 本国驾驶证" }, { id: "idp", label: "🪪 可在越南使用的有效国际驾驶许可" }, { id: "class", label: "🏍️ 驾驶证准驾车型与要租的摩托车相符" }],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "很好。驾驶前应检查所需的驾照文件，并确认准驾车型与车辆相符。",
+          fbBad: "还不够。请确认所有必要证件和准驾车型。",
+          tip: "租摩托车前确认驾驶证在法律上有效。"
+        },
+        {
+          title: "越南路口", scene: 3,
+          dialogue: [{ who: "minh", text: "🔴 红灯。不过现在路上看起来很空…" }, { who: "alex", text: "那个人过去了，我也可以跟着走吗?" }],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "正确。红灯就是停车，即使道路很空、别人正在通过也一样。",
+          fbBad: "闯红灯不安全，也可能违反交通规则。",
+          tip: "红灯就是停车 — 即使道路看起来很空。"
+        },
+        {
+          title: "晚餐与啤酒", scene: 4,
+          dialogue: [{ who: "alex", text: "🍜🍢🍺 ... 酒店就在不远处，对吧?" }, { who: "minh", text: "喝了酒就不要自己开车，即使距离很短。" }],
+          type: "choice",
+          options: [
+            { text: "🛵 自己骑摩托车回酒店", tag: "A", correct: false, fb: "不安全。饮酒后不要自己驾驶车辆。" },
+            { text: "🚕 叫车或选择其他安全交通方式", tag: "B", correct: true, fb: "不错。Alex 可以在饮酒后不自行驾驶，安全回酒店。" },
+            { text: "🚶 如果酒店很近就步行", tag: "C", correct: false, fb: "只有在路线确实安全且适合步行时才考虑。" }
+          ],
+          tip: "喝酒后不要驾驶。"
+        },
+        {
+          title: "摩托车网约车 / 乘客", scene: 5,
+          dialogue: [{ who: "minh", text: "摩托车网约车司机递给 Alex 一顶头盔。" }, { who: "alex", text: "我只是乘客，也真的需要戴吗?" }],
+          type: "choice",
+          options: [
+            { text: "不用，我只是坐在后面", tag: "A", correct: false, fb: "不正确。乘客也需要佩戴头盔。" },
+            { text: "需要。戴好头盔并正确系紧带子", tag: "B", correct: true, fb: "正确。摩托车乘客也应正确佩戴头盔。" }
+          ],
+          tip: "乘客也要戴头盔。"
+        }
+      ],
+      fr: [
+        {
+          title: "Bienvenue au Vietnam", scene: 1,
+          dialogue: [{ who: "alex", text: "Minh, comment suis-je censé traverser CETTE rue ?!" }, { who: "minh", text: "Ne cours pas entre les véhicules. Cherche un passage piéton, une passerelle, un passage souterrain ou un feu, puis suis le signal." }],
+          type: "choice",
+          options: [
+            { text: "Courir entre les motos dès qu'il y a un espace", tag: "A", correct: false, fb: "Très risqué. Les mouvements des véhicules peuvent être imprévisibles et les conducteurs ont peu de temps pour réagir." },
+            { text: "Se placer sur la route et faire signe aux motos de s'arrêter", tag: "B", correct: false, fb: "Un geste de la main ne garantit pas que les véhicules puissent s'arrêter en sécurité." },
+            { text: "Chercher le passage piéton / feu / aménagement piéton le plus proche et suivre le signal", tag: "C", correct: true, fb: "Correct. Utilisez les aménagements pour piétons lorsqu'ils sont disponibles et respectez les signaux." }
+          ],
+          tip: "Trouvez un passage adapté et respectez les feux de circulation."
+        },
+        {
+          title: "Louer une moto", scene: 2,
+          dialogue: [{ who: "alex", text: "Location de moto — 150 000 VND/jour. J'ai mon permis national. Puis-je conduire ?" }, { who: "minh", text: "Avant de louer, vérifions si tes documents sont valables pour conduire au Vietnam." }],
+          type: "checklist",
+          checkItems: [{ id: "nat", label: "🪪 Permis de conduire national" }, { id: "idp", label: "🪪 Permis de conduire international valable au Vietnam" }, { id: "class", label: "🏍️ La catégorie du permis correspond à la moto louée" }],
+          checklistCorrect: ["nat", "idp", "class"],
+          fbGood: "Bien. Avant de conduire, vérifiez les documents requis et la catégorie de véhicule autorisée.",
+          fbBad: "Pas encore suffisant. Vérifiez tous les documents nécessaires et la catégorie autorisée.",
+          tip: "Vérifiez que votre permis est légalement valable avant de louer une moto."
+        },
+        {
+          title: "Carrefour vietnamien", scene: 3,
+          dialogue: [{ who: "minh", text: "🔴 Le feu est rouge, mais la route semble presque vide…" }, { who: "alex", text: "Cette personne est passée. Je la suis ?" }],
+          type: "countdown", correctChoice: "STOP",
+          fbGood: "Correct. Rouge signifie arrêt, même si la route semble vide et que d'autres personnes passent.",
+          fbBad: "Passer au rouge est dangereux et peut constituer une infraction.",
+          tip: "Rouge signifie arrêt — même si la route semble vide."
+        },
+        {
+          title: "Bière au dîner", scene: 4,
+          dialogue: [{ who: "alex", text: "🍜🍢🍺 ... L'hôtel est juste à côté, non ?" }, { who: "minh", text: "Si tu as bu, ne conduis pas, même pour une courte distance." }],
+          type: "choice",
+          options: [
+            { text: "🛵 Revenir à l'hôtel en moto", tag: "A", correct: false, fb: "Ce n'est pas sûr. Après avoir bu de l'alcool, ne conduisez pas vous-même." },
+            { text: "🚕 Réserver une voiture ou utiliser un autre moyen de transport sûr", tag: "B", correct: true, fb: "Bon choix. Alex peut rentrer sans conduire après avoir bu." },
+            { text: "🚶 Marcher si l'hôtel est proche", tag: "C", correct: false, fb: "Cela peut convenir uniquement si l'itinéraire est réellement sûr et adapté à la marche." }
+          ],
+          tip: "Si vous buvez, ne conduisez pas."
+        },
+        {
+          title: "Moto-taxi / Passager", scene: 5,
+          dialogue: [{ who: "minh", text: "Le conducteur du moto-taxi donne un casque à Alex." }, { who: "alex", text: "Je ne suis que passager. J'en ai vraiment besoin ?" }],
+          type: "choice",
+          options: [
+            { text: "Non, je suis seulement assis derrière", tag: "A", correct: false, fb: "Incorrect. Les passagers doivent également porter un casque." },
+            { text: "Oui. Mettre le casque et attacher correctement la jugulaire", tag: "B", correct: true, fb: "Correct. Un passager de moto doit aussi porter correctement un casque." }
+          ],
+          tip: "Passager ? Casque obligatoire."
+        }
+      ]
+    };
+
+
+    let currentLang = 'en';
+    let currentLevel = 0;
+    let unlocked = [];
+    const $ = id => document.getElementById(id);
+
+    function applyStaticLanguage() {
+      const u = UI[currentLang];
+      document.documentElement.lang = currentLang;
+      $('brand-text').textContent = u.brand;
+      $('cover-desc').textContent = u.coverDesc;
+      $('cast-alex').textContent = u.castAlex;
+      $('cast-minh').textContent = u.castMinh;
+      $('language-label').textContent = u.languageLabel;
+      $('language-note').textContent = u.languageNote;
+      $('mobile-demo-note').textContent = u.mobileDemo || '';
+      $('start-btn').textContent = u.start;
+      $('lv-next').textContent = u.next;
+      $('final-reward').textContent = u.finalReward;
+      $('final-desc').textContent = u.finalDesc;
+      $('replay-btn').textContent = u.replay;
+      $('footer-note').textContent = u.footer;
+      $('tip-stamp').textContent = u.tipStamp;
+      $('tip-close-btn').textContent = u.tipClose;
+      $('top-language').value = currentLang;
+      $('cover-language').value = currentLang;
+    }
+
+    function changeLanguage(lang) {
+      if (!LEVELS[lang]) return;
+      currentLang = lang;
+
+      const bgMusic = getMusic();
+      if (bgMusic) {
+        bgMusic.volume = 0.25;
+        bgMusic.addEventListener('play', updateMusicButton);
+        bgMusic.addEventListener('pause', updateMusicButton);
+        bgMusic.addEventListener('error', () => {
+          const btn = $('music-btn');
+          if (btn) {
+            btn.classList.add('music-error');
+            btn.textContent = '⚠️';
+            btn.title = 'Music file not found: assets/welcome_to_vietnam.mp3';
+          }
+        });
+      }
+      updateMusicButton();
+
+      applyStaticLanguage();
+
+      if (!$('screen-level').classList.contains('hidden')) {
+        renderLevel();
+      }
+      if (!$('screen-end').classList.contains('hidden')) {
+        showEnd();
+      }
+    }
+
+
+    let musicWanted = true;
+
+    function getMusic() {
+      return $('bg-music');
+    }
+
+    function updateMusicButton() {
+      const btn = $('music-btn');
+      const music = getMusic();
+      if (!btn || !music) return;
+
+      if (btn.classList.contains('music-error')) {
+        btn.textContent = '⚠️';
+        return;
+      }
+
+      btn.textContent = (!music.paused && musicWanted) ? '🔊' : '🔇';
+    }
+
+    async function startBackgroundMusic() {
+      const music = getMusic();
+      if (!music || !musicWanted) return;
+
+      music.volume = 0.25;
+
+      try {
+        await music.play();
+        $('music-btn').classList.remove('music-error');
+        $('music-btn').title = 'Background music: Welcome to Vietnam';
+      } catch (err) {
+        // Game continues normally if the MP3 is missing or playback is blocked.
+        updateMusicButton();
+      }
+      updateMusicButton();
+    }
+
+    async function toggleMusic() {
+      const music = getMusic();
+      if (!music) return;
+
+      if (!music.paused) {
+        musicWanted = false;
+        music.pause();
+        updateMusicButton();
+        return;
+      }
+
+      musicWanted = true;
+      await startBackgroundMusic();
+    }
+
+
+    function startGame() {
+      startBackgroundMusic();
+      $('screen-cover').classList.add('hidden');
+      currentLevel = 0;
+      unlocked = [];
+      updateNotebook();
+      renderLevel();
+    }
+
+    function restartGame() {
+      $('screen-end').classList.add('hidden');
+      $('screen-level').classList.add('hidden');
+      currentLevel = 0;
+      unlocked = [];
+      updateNotebook();
+      $('screen-cover').classList.remove('hidden');
+    }
+
+    function updateNotebook() {
+      document.querySelectorAll('#notebook .page').forEach(p => {
+        const i = parseInt(p.dataset.i, 10);
+        p.classList.toggle('filled', unlocked.includes(i));
+      });
+    }
+
+    function renderLevel() {
+      const levels = LEVELS[currentLang];
+      const lv = levels[currentLevel];
+
+      $('screen-level').classList.remove('hidden');
+      $('lv-num').textContent = 'LEVEL ' + (currentLevel + 1);
+      $('lv-title').textContent = lv.title;
+      $('lv-progress').textContent = (currentLevel + 1) + ' / ' + levels.length;
+      $('lv-scene').innerHTML = scenes[lv.scene];
+
+      $('lv-dialogue').innerHTML = lv.dialogue.map(d =>
+        `<div class="bubble ${d.who}"><span class="who">${d.who === 'alex' ? 'Alex' : 'Minh'}</span>${d.text}</div>`
+      ).join('');
+
+      const fb = $('lv-feedback');
+      fb.style.display = 'none';
+      fb.className = 'feedback';
+      $('lv-next').style.display = 'none';
+      $('lv-next').textContent = UI[currentLang].next;
+
+      const box = $('lv-interactive');
+      box.innerHTML = '';
+
+      if (lv.type === 'choice') {
+        const wrap = document.createElement('div');
+        wrap.className = 'choices';
+        lv.options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerHTML = `<span class="tag">${opt.tag}</span>${opt.text}`;
+          btn.onclick = () => handleChoiceResult(opt.correct, opt.fb, wrap);
+          wrap.appendChild(btn);
+        });
+        box.appendChild(wrap);
+      }
+
+      if (lv.type === 'checklist') {
+        const wrap = document.createElement('div');
+        wrap.className = 'checklist';
+        lv.checkItems.forEach(item => {
+          const label = document.createElement('label');
+          label.className = 'check-item';
+          label.innerHTML = `<input type="checkbox" value="${item.id}"> ${item.label}`;
+          wrap.appendChild(label);
+        });
+        box.appendChild(wrap);
+
+        const submit = document.createElement('button');
+        submit.className = 'choice-btn checklist-submit';
+        submit.style.textAlign = 'center';
+        submit.style.fontFamily = "'Baloo 2'";
+        submit.textContent = UI[currentLang].confirm;
+        submit.onclick = () => {
+          const checked = Array.from(wrap.querySelectorAll('input:checked')).map(i => i.value);
+          const correct = lv.checklistCorrect.every(c => checked.includes(c)) &&
+            checked.length === lv.checklistCorrect.length;
+          wrap.querySelectorAll('input').forEach(i => i.disabled = true);
+          submit.disabled = true;
+          submit.style.opacity = .5;
+          handleChoiceResult(correct, correct ? lv.fbGood : lv.fbBad, wrap);
+        };
+        box.appendChild(submit);
+      }
+
+      if (lv.type === 'countdown') {
+        const wrap = document.createElement('div');
+        wrap.className = 'countdown-wrap';
+        wrap.innerHTML = `
       <div class="light" id="cd-light">3</div>
       <div class="go-stop-row">
         <button class="choice-btn stop-btn" id="cd-stop">${UI[currentLang].stop}</button>
         <button class="choice-btn go-btn" id="cd-go">${UI[currentLang].go}</button>
       </div>`;
-    box.appendChild(wrap);
+        box.appendChild(wrap);
 
-    let n=3;
-    const lightEl=wrap.querySelector('#cd-light');
-    const timer=setInterval(()=>{
-      n--;
-      if(n<=0){clearInterval(timer);lightEl.textContent='!';}
-      else lightEl.textContent=n;
-    },700);
+        let n = 3;
+        const lightEl = wrap.querySelector('#cd-light');
+        const timer = setInterval(() => {
+          n--;
+          if (n <= 0) { clearInterval(timer); lightEl.textContent = '!'; }
+          else lightEl.textContent = n;
+        }, 700);
 
-    wrap.querySelector('#cd-stop').onclick=()=>{
-      clearInterval(timer);
-      handleChoiceResult(lv.correctChoice==='STOP',lv.correctChoice==='STOP'?lv.fbGood:lv.fbBad,wrap);
-    };
-    wrap.querySelector('#cd-go').onclick=()=>{
-      clearInterval(timer);
-      handleChoiceResult(lv.correctChoice==='GO',lv.correctChoice==='GO'?lv.fbGood:lv.fbBad,wrap);
-    };
-  }
-}
+        wrap.querySelector('#cd-stop').onclick = () => {
+          clearInterval(timer);
+          handleChoiceResult(lv.correctChoice === 'STOP', lv.correctChoice === 'STOP' ? lv.fbGood : lv.fbBad, wrap);
+        };
+        wrap.querySelector('#cd-go').onclick = () => {
+          clearInterval(timer);
+          handleChoiceResult(lv.correctChoice === 'GO', lv.correctChoice === 'GO' ? lv.fbGood : lv.fbBad, wrap);
+        };
+      }
+    }
 
-function handleChoiceResult(correct,text,wrap){
-  const fb=$('lv-feedback');
-  fb.style.display='block';
-  fb.className='feedback '+(correct?'good':'bad');
-  $('fb-title').textContent=correct?UI[currentLang].safe:UI[currentLang].risk;
+    function handleChoiceResult(correct, text, wrap) {
+      const fb = $('lv-feedback');
+      fb.style.display = 'block';
+      fb.className = 'feedback ' + (correct ? 'good' : 'bad');
+      $('fb-title').textContent = correct ? UI[currentLang].safe : UI[currentLang].risk;
 
-  if(correct){
-    // Correct answer: lock the interaction and allow progression.
-    wrap.querySelectorAll('button,.check-item').forEach(b=>b.style.pointerEvents='none');
-    $('fb-text').textContent=text;
-    $('lv-next').textContent=UI[currentLang].next;
-    $('lv-next').style.display='block';
-    $('lv-next').onclick=onLevelComplete;
-  }else{
-    // Wrong answer: show warning and DO NOT allow the user to pass the level.
-    $('fb-text').textContent=text+' '+UI[currentLang].blocked;
-    $('lv-next').textContent=UI[currentLang].retry;
-    $('lv-next').style.display='block';
-    $('lv-next').onclick=()=>renderLevel();
-  }
-}
+      if (correct) {
+        // Correct answer: lock the interaction and allow progression.
+        wrap.querySelectorAll('button,.check-item').forEach(b => b.style.pointerEvents = 'none');
+        $('fb-text').textContent = text;
+        $('lv-next').textContent = UI[currentLang].next;
+        $('lv-next').style.display = 'block';
+        $('lv-next').onclick = onLevelComplete;
+      } else {
+        // Wrong answer: show warning and DO NOT allow the user to pass the level.
+        $('fb-text').textContent = text + ' ' + UI[currentLang].blocked;
+        $('lv-next').textContent = UI[currentLang].retry;
+        $('lv-next').style.display = 'block';
+        $('lv-next').onclick = () => renderLevel();
+      }
+    }
 
-function onLevelComplete(){
-  const levels=LEVELS[currentLang];
-  const lv=levels[currentLevel];
-  const num=currentLevel+1;
-  if(!unlocked.includes(num)) unlocked.push(num);
-  updateNotebook();
-  showTip(num,lv.tip);
-}
+    function onLevelComplete() {
+      const levels = LEVELS[currentLang];
+      const lv = levels[currentLevel];
+      const num = currentLevel + 1;
+      if (!unlocked.includes(num)) unlocked.push(num);
+      updateNotebook();
+      showTip(num, lv.tip);
+    }
 
-function showTip(num,text){
-  $('tip-num').textContent=num;
-  $('tip-text').textContent=text;
-  $('tip-overlay').style.display='flex';
-}
+    function showTip(num, text) {
+      $('tip-num').textContent = num;
+      $('tip-text').textContent = text;
+      $('tip-overlay').style.display = 'flex';
+    }
 
-function closeTip(){
-  $('tip-overlay').style.display='none';
-  currentLevel++;
-  if(currentLevel<LEVELS[currentLang].length){
-    renderLevel();
-  }else{
-    $('screen-level').classList.add('hidden');
-    showEnd();
-  }
-}
+    function closeTip() {
+      $('tip-overlay').style.display = 'none';
+      currentLevel++;
+      if (currentLevel < LEVELS[currentLang].length) {
+        renderLevel();
+      } else {
+        $('screen-level').classList.add('hidden');
+        showEnd();
+      }
+    }
 
-function showEnd(){
-  const levels=LEVELS[currentLang];
-  $('guide-list').innerHTML=levels.map((lv,i)=>
-    `<div class="guide-item"><div class="num">${i+1}</div><p>${lv.tip}</p></div>`
-  ).join('');
-  $('screen-end').classList.remove('hidden');
-}
+    function showEnd() {
+      const levels = LEVELS[currentLang];
+      $('guide-list').innerHTML = levels.map((lv, i) =>
+        `<div class="guide-item"><div class="num">${i + 1}</div><p>${lv.tip}</p></div>`
+      ).join('');
+      $('screen-end').classList.remove('hidden');
+    }
 
-applyStaticLanguage();
-</script>
+    applyStaticLanguage();
+  </script>
 </body>
+
 </html>
